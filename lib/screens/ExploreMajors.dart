@@ -1,9 +1,10 @@
 import 'package:artic/components/rounded_button.dart';
 import 'package:artic/constants.dart';
+import 'package:artic/screens/PossibleMajors.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:search_choices/search_choices.dart';
-
+import 'package:get/get.dart';
 import 'Overview.dart';
 
 class ExploreMajors extends StatefulWidget {
@@ -151,7 +152,10 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                       setState(() {
                         showSpinner = true;
                       });
+                      Get.to(() => PossibleMajors());
+                      //Navigator.pushNamed(context, PossibleMajors.id);
 
+                      /*
                       try {
                         final user = null; // filler code until DB is set up
                         /*
@@ -159,7 +163,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                           email: email, password: password);
                        */
                         if (user != '') {
-                          Navigator.pushNamed(context, Overview.id);
+                          Navigator.pushNamed(context, PossibleMajors.id);
                         }
 
                         setState(() {
@@ -168,6 +172,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                       } catch (e) {
                         print(e);
                       }
+                       */
                     },
                     height: 50.0,
                     width: 250.0),
