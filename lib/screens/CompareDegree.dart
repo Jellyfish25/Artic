@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants.dart';
-import 'Overview.dart';
+import 'ComparisonScreen.dart';
 
 class CompareDegree extends StatefulWidget {
   @override
@@ -12,14 +13,7 @@ class CompareDegree extends StatefulWidget {
 
 class _CompareDegreeState extends State<CompareDegree> {
   List<int> _selectedItems = <int>[];
-  List<String> fruit = [
-    'apple',
-    'banana',
-    'orange',
-    'pineapple',
-    'B.S. Computer Engineering',
-    'potato'
-  ];
+
   int count = 0;
 
   @override
@@ -77,6 +71,7 @@ class _CompareDegreeState extends State<CompareDegree> {
                                   if (count != 2) {
                                     setState(() {
                                       _selectedItems.add(index);
+                                      indexes.add(index);
                                       count++;
                                     });
                                   }
@@ -84,13 +79,13 @@ class _CompareDegreeState extends State<CompareDegree> {
                                   setState(() {
                                     _selectedItems
                                         .removeWhere((val) => val == index);
+                                    indexes.removeWhere((val) => val == index);
                                     count--;
                                   });
                                 }
                               },
                               onLongPress: () {
-                                print(
-                                    'Selected Item index at: $_selectedItems');
+                                print('Selected Item index at: $indexes');
                                 //idk what we want this to do yet
                               },
                               title: Align(
@@ -124,7 +119,7 @@ class _CompareDegreeState extends State<CompareDegree> {
                     borderRadius: BorderRadius.circular(22.0)),
                 onPressed: () {
                   count == 2
-                      ? Get.to(() => Overview())
+                      ?  Get.to(() => ComparisonScreen())
                       : showAlertDialog(context);
                 },
                 child: Text(
