@@ -9,6 +9,19 @@ import 'screens/CompareDegree.dart';
 import 'screens/MyPlans.dart';
 import 'screens/WelcomeScreen.dart';
 
+
+//placeholder until class gets made for list
+List<int> indexes = <int>[];
+List<String> fruit = [
+  'Electrical Engineering',
+  'banana',
+  'orange',
+  'pineapple',
+  'B.S. Computer Engineering',
+  'potato'
+];
+
+
 // potentially make this the entire button, constant button for confirm?
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,
@@ -93,6 +106,7 @@ SizedBox kNavBar = SizedBox(
             child: Icon(Icons.compare_arrows, color: Colors.black, size: 40)),
         title: const KNavBarText(title: 'Compare Plans'),
         onTap: () {
+          indexes.clear();
           Get.to(() => CompareDegree());
         },
       ),

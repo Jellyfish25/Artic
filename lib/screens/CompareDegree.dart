@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants.dart';
-import 'Overview.dart';
-
+import 'ComparisonScreen.dart';
 
 class CompareDegree extends StatefulWidget {
   @override
@@ -14,7 +13,7 @@ class CompareDegree extends StatefulWidget {
 
 class _CompareDegreeState extends State<CompareDegree> {
   List<int> _selectedItems = <int>[];
-  List<String> fruit = ['apple', 'banana', 'orange', 'pineapple', 'B.S. Computer Engineering', 'potato'];
+
   int count = 0;
 
   @override
@@ -27,11 +26,10 @@ class _CompareDegreeState extends State<CompareDegree> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-              Center(
+            Center(
               child: Container(
-
                 // adjust container width/height to fit box better
-                width: MediaQuery.of(context).size.width ,
+                width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 1.75,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -63,47 +61,46 @@ class _CompareDegreeState extends State<CompareDegree> {
                       child: ListView.builder(
                         itemCount: fruit.length,
                         itemBuilder: (context, index) {
-
-                          return
-                            Container(
-                              color: (_selectedItems.contains(index)) ? Colors.blue.withOpacity(0.5) : Colors.transparent,
-
-                              child: ListTile(
-
-                                onTap: () {
-
-                                  if (!_selectedItems.contains(index)) {
-                                    if (count != 2) {
-                                      setState(() {
-                                        _selectedItems.add(index);
-                                        count++;
-                                      });
-                                    }
-                                  } else if (_selectedItems.contains(index)) {
+                          return Container(
+                            color: (_selectedItems.contains(index))
+                                ? Colors.blue.withOpacity(0.5)
+                                : Colors.transparent,
+                            child: ListTile(
+                              onTap: () {
+                                if (!_selectedItems.contains(index)) {
+                                  if (count != 2) {
                                     setState(() {
-                                      _selectedItems
-                                          .removeWhere((val) => val == index);
-                                      count--;
+                                      _selectedItems.add(index);
+                                      indexes.add(index);
+                                      count++;
                                     });
                                   }
-                                },
-                                onLongPress: () {
-                                  print('Selected Item index at: $_selectedItems');
-                                  //idk what we want this to do yet
-                                },
-                                title: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    fruit[index],
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                } else if (_selectedItems.contains(index)) {
+                                  setState(() {
+                                    _selectedItems
+                                        .removeWhere((val) => val == index);
+                                    indexes.removeWhere((val) => val == index);
+                                    count--;
+                                  });
+                                }
+                              },
+                              onLongPress: () {
+                                print('Selected Item index at: $indexes');
+                                //idk what we want this to do yet
+                              },
+                              title: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  fruit[index],
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
-                            );
+                            ),
+                          );
                         },
                       ),
                     ),
@@ -111,20 +108,19 @@ class _CompareDegreeState extends State<CompareDegree> {
                 ),
               ),
             ),
-
-           const  SizedBox (height: 50.0),
+            const SizedBox(height: 50.0),
             Align(
               alignment: Alignment.bottomCenter,
               child: MaterialButton(
                 minWidth: MediaQuery.of(context).size.width / 5,
-                height: MediaQuery.of(context).size.height / 10 ,
+                height: MediaQuery.of(context).size.height / 10,
                 color: const Color(0xff1375CF),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(22.0)),
                 onPressed: () {
-
-                  count == 2 ?  Get.to(() => Overview()) :  showAlertDialog(context);
-
+                  count == 2
+                      ?  Get.to(() => ComparisonScreen())
+                      : showAlertDialog(context);
                 },
                 child: Text(
                   'Compare Plans',
@@ -137,43 +133,37 @@ class _CompareDegreeState extends State<CompareDegree> {
                 ),
               ),
             ),
-
           ],
         ),
-
       ),
       drawer: kNavBar,
     );
   }
 }
 
+showAlertDialog(BuildContext context) {
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
 
-  showAlertDialog(BuildContext context) {
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Error"),
+    content: Text("Please select 2 degree plans"),
+    actions: [
+      okButton,
+    ],
+  );
 
-    // set up the button
-    Widget okButton = TextButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Error"),
-      content: Text("Please select 2 degree plans"),
-      actions: [
-        okButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
