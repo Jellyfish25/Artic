@@ -14,6 +14,10 @@ class ExploreMajors extends StatefulWidget {
 }
 
 class _ExploreMajorsState extends State<ExploreMajors> {
+
+  bool _isCollegeEntered = false;
+  bool _isFullyEntered = false;
+
   bool showSpinner = false;
 
   // Tester data for searchable dropdown
@@ -52,6 +56,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
   void initState() {
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,13 +128,18 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                   height: 10.0,
                 ),
                 SearchChoices.multiple(
-                  items: majors,
+                  items: selectedColleges.isEmpty? [] : majors,
                   selectedItems: selectedMajors,
                   hint: const Padding(
                     padding: EdgeInsets.all(12.0),
                     child: Text("Select any"),
                   ),
                   searchHint: "Select any",
+                  disabledHint: (selectedColleges) {
+                    return (const Text(
+                      "Please select college(s) first"
+                    ));
+                  },
                   onChanged: (value) {
                     setState(() {
                       selectedMajors = value;
