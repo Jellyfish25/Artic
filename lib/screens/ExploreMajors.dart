@@ -15,9 +15,6 @@ class ExploreMajors extends StatefulWidget {
 
 class _ExploreMajorsState extends State<ExploreMajors> {
 
-  bool _isCollegeEntered = false;
-  bool _isFullyEntered = false;
-
   bool showSpinner = false;
 
   // Tester data for searchable dropdown
@@ -57,6 +54,9 @@ class _ExploreMajorsState extends State<ExploreMajors> {
     super.initState();
   }
 
+  bool isFullyEntered() {
+    return selectedColleges.isNotEmpty && selectedMajors.isNotEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,37 +155,17 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                 const SizedBox(
                   height: 50.0,
                 ),
-                RoundedButton(
-                    title: 'Explore',
-                    color: const Color(0xFF1375CF),
-                    onPressed: () async {
-                      setState(() {
-                        showSpinner = true;
-                      });
-                      Get.to(() => PossibleMajors());
-                      //Navigator.pushNamed(context, PossibleMajors.id);
-
-                      /*
-                      try {
-                        final user = null; // filler code until DB is set up
-                        /*
-                      final user = await _auth.signInWithEmailAndPassword(
-                          email: email, password: password);
-                       */
-                        if (user != '') {
-                          Navigator.pushNamed(context, PossibleMajors.id);
-                        }
-
-                        setState(() {
-                          showSpinner = false;
-                        });
-                      } catch (e) {
-                        print(e);
-                      }
-                       */
-                    },
-                    height: 50.0,
-                    width: 250.0),
+                IgnorePointer(
+                  ignoring: !isFullyEntered(),
+                  child: RoundedButton(
+                      title: 'Explore',
+                      color: isFullyEntered() ? const Color(0xFF1375CF) : Colors.grey,
+                      onPressed: () async {
+                        Get.to(() => PossibleMajors());
+                      },
+                      height: 50.0,
+                      width: 250.0),
+                ),
               ],
             ),
           ),

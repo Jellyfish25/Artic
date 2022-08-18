@@ -53,7 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.left,
                   onChanged: (value) {
-                    email = value;
+                    setState(() {
+                      email = value;
+                    });
                   },
                   decoration: kTextFieldDecoration.copyWith(
                       icon: const Icon(Icons.email),
@@ -67,7 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: true,
                   textAlign: TextAlign.left,
                   onChanged: (value) {
-                    password = value;
+                    setState(() {
+                      password = value;
+                    });
                   },
                   decoration: kTextFieldDecoration.copyWith(
                     icon: const Icon(Icons.vpn_key),
@@ -78,33 +82,36 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 12.0,
                 ),
-                RoundedButton(
-                    title: 'Confirm',
-                    color: const Color(0xFF1375CF),
-                    onPressed: () async {
-                      setState(() {
-                        showSpinner = true;
-                      });
-
-                      try {
-                        final user = email; // filler code until DB is set up
-                        /*
-                      final user = await _auth.signInWithEmailAndPassword(
-                          email: email, password: password);
-                       */
-                        if (user != '') {
-                          Navigator.pushNamed(context, Overview.id);
-                        }
-
+                IgnorePointer(
+                  ignoring: (email.isEmpty || password.isEmpty),
+                  child: RoundedButton(
+                      title: 'Confirm',
+                      color: (email.isEmpty || password.isEmpty) ? Colors.grey : const Color(0xFF1375CF),
+                      onPressed: () async {
                         setState(() {
-                          showSpinner = false;
+                          showSpinner = true;
                         });
-                      } catch (e) {
-                        print(e);
-                      }
-                    },
-                    height: 50.0,
-                    width: 250.0),
+
+                        try {
+                          final user = email; // filler code until DB is set up
+                          /*
+                        final user = await _auth.signInWithEmailAndPassword(
+                            email: email, password: password);
+                         */
+                          if (user != '') {
+                            Navigator.pushNamed(context, Overview.id);
+                          }
+
+                          setState(() {
+                            showSpinner = false;
+                          });
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      height: 50.0,
+                      width: 250.0),
+                ),
                 const Text(
                   'Don\'t have an account?',
                   textAlign: TextAlign.center,
