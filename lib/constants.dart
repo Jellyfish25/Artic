@@ -1,3 +1,4 @@
+import 'package:artic/screens/EditAccount.dart';
 import 'package:artic/screens/ExploreMajors.dart';
 import 'package:artic/screens/Overview.dart';
 import 'package:flutter/material.dart';
@@ -161,7 +162,9 @@ SizedBox kNavBar = SizedBox(
         dense: true,
         visualDensity: const VisualDensity(vertical: -3),
         title: const KNavBarText(title: "Edit Account"),
-        onTap: () {},
+        onTap: () {
+          Get.to(() => const EditAccountScreen());
+        },
       )
     ],
   )),

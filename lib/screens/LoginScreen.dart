@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextButton(
                   style: TextButton.styleFrom(
                       textStyle:
-                          const TextStyle(color: Colors.blue, fontSize: 20)),
+                          const TextStyle(color: Colors.blue, fontSize: 20, decoration: TextDecoration.underline)),
                   onPressed: () {
                     Navigator.pushNamed(context, SignupScreen.id);
                   },
@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextButton(
                   style: TextButton.styleFrom(
                       textStyle:
-                          const TextStyle(color: Colors.blue, fontSize: 20)),
+                          const TextStyle(color: Colors.blue, fontSize: 20, decoration: TextDecoration.underline)),
                   onPressed: () {
                     Navigator.pushNamed(context, ForgotPassword.id);
                   },
