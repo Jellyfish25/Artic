@@ -21,24 +21,20 @@ class ComparisonScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-
             const SizedBox(
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                    'Degrees:',
+                  'Degrees:',
                   style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
-                ),
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-
             ),
-
             const SizedBox(height: 5.0),
-
             SizedBox(
               height: MediaQuery.of(context).size.height / 7.5,
               child: ListView.builder(
@@ -63,7 +59,6 @@ class ComparisonScreen extends StatelessWidget {
                 },
               ),
             ),
-
             Center(
               child: Container(
                 // adjust container width/height to fit box better
@@ -124,9 +119,7 @@ class ComparisonScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 10.0),
-
             Center(
               child: Container(
                 // adjust container width/height to fit box better
@@ -187,9 +180,7 @@ class ComparisonScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 10.0),
-
             Center(
               child: Container(
                 // adjust container width/height to fit box better
@@ -235,15 +226,13 @@ class ComparisonScreen extends StatelessWidget {
                               alignment: Alignment.center,
                               child: Text(
                                 fruit[index],
-                                style:
-                                  GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-
+                                style: GoogleFonts.roboto(
+                                  color: Colors.black,
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
+                            ),
                           );
                         },
                       ),
@@ -252,9 +241,7 @@ class ComparisonScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 50.0),
-
             Align(
               alignment: Alignment.bottomCenter,
               child: MaterialButton(
