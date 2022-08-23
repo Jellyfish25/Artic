@@ -10,9 +10,8 @@ import '../screens/Overview.dart';
 import '../screens/SignupPage.dart';
 import '../screens/WelcomeScreen.dart';
 import '../screens/ComparisonScreen.dart';
-
-
-
+import '../screens/CreatePlan.dart';
+import '../screens/ViewPlan.dart';
 
 void main() => runApp(const Artic());
 
@@ -33,6 +32,8 @@ class Artic extends StatelessWidget {
         MyPlans.id: (context) => MyPlans(),
         CompareDegree.id: (context) => CompareDegree(),
         ComparisonScreen.id: (context) => ComparisonScreen(),
+        CreatePlan.id: (context) => CreatePlan(),
+        ViewPlan.id: (context) => ViewPlan(),
       },
 
       //home: HomePage(),

@@ -150,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   onPressed: () {
                     Navigator.pushNamed(context, LoginScreen.id);
                   },
-                  child: const Text('sign in'),
+                  child: const Text('Sign In'),
                 ),
               ],
             ),

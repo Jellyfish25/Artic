@@ -9,7 +9,6 @@ import 'screens/CompareDegree.dart';
 import 'screens/MyPlans.dart';
 import 'screens/WelcomeScreen.dart';
 
-
 //placeholder until class gets made for list
 List<int> indexes = <int>[];
 List<String> fruit = [
@@ -21,7 +20,6 @@ List<String> fruit = [
   'potato'
 ];
 
-
 // potentially make this the entire button, constant button for confirm?
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,
@@ -32,11 +30,11 @@ const kSendButtonTextStyle = TextStyle(
 // copied from Flash Chat App as an example
 const kTextFieldDecoration = InputDecoration(
   labelText: '',
-  icon: Icon(null),
+  //icon: Icon(null), creates spacing when used without an icon (not needed)
   isDense: true,
   contentPadding: EdgeInsets.all(8),
   hintText: 'Enter a value',
-  hintStyle: TextStyle(fontSize: 20.0),
+  hintStyle: TextStyle(fontSize: 20.0), // font size maybe too big?
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Color(0xFF006CD0), width: 1.0),
   ),
@@ -215,19 +213,38 @@ class KAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: Builder(
+        builder: (BuildContext context) {
+          return IconButton(
+            // icon: new Image.network(
+            //     'https://s3-media0.fl.yelpcdn.com/bphoto/fDKPCHEb8zMCL0tnWxuCmA/348s.jpg'),
+            icon: const Icon(
+              Icons.menu,
+              size: 45.0,
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        },
+      ),
       automaticallyImplyLeading: true,
       centerTitle: true,
       toolbarHeight: 60,
       backgroundColor: Colors.transparent,
       elevation: 0,
       iconTheme: const IconThemeData(color: Color(0xFF007BFF)),
-      title: Text(
-        title,
-        style: GoogleFonts.roboto(
-          fontWeight: FontWeight.w700,
-          fontStyle: FontStyle.normal,
-          fontSize: 26,
-          color: const Color(0xFF007BFF),
+      title: Padding(
+        //adjust this padding to push the title higher/lower
+        padding: const EdgeInsets.only(top: 5.0),
+        child: Text(
+          title,
+          style: GoogleFonts.roboto(
+            fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.normal,
+            fontSize: 26,
+            color: const Color(0xFF007BFF),
+          ),
         ),
       ),
       actions: [
