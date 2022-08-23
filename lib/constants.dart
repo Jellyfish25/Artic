@@ -1,3 +1,4 @@
+import 'package:artic/screens/CourseHistory.dart';
 import 'package:artic/screens/ExploreMajors.dart';
 import 'package:artic/screens/Overview.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import 'screens/CompareDegree.dart';
 import 'screens/MyPlans.dart';
 import 'screens/WelcomeScreen.dart';
 
-
 //placeholder until class gets made for list
 List<int> indexes = <int>[];
 List<String> fruit = [
@@ -20,7 +20,6 @@ List<String> fruit = [
   'B.S. Computer Engineering',
   'potato'
 ];
-
 
 // potentially make this the entire button, constant button for confirm?
 const kSendButtonTextStyle = TextStyle(
@@ -130,7 +129,9 @@ SizedBox kNavBar = SizedBox(
         leading: const ClipRect(
             child: Icon(Icons.history, color: Colors.black, size: 40)),
         title: const KNavBarText(title: 'Course History'),
-        onTap: () {},
+        onTap: () {
+          Get.to(() => CourseHistory());
+        },
       ),
       const SizedBox(height: 160),
       ListTile(

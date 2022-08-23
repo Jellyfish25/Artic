@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../constants.dart';
 import 'ComparisonScreen.dart';
 
@@ -119,7 +120,7 @@ class _CompareDegreeState extends State<CompareDegree> {
                     borderRadius: BorderRadius.circular(22.0)),
                 onPressed: () {
                   count == 2
-                      ?  Get.to(() => ComparisonScreen())
+                      ? Get.to(() => ComparisonScreen())
                       : showAlertDialog(context);
                 },
                 child: Text(

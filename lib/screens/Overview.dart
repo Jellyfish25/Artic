@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+
 import '../constants.dart';
 
 class Overview extends StatefulWidget {
   static const String id = 'overview';
+  const Overview({Key? key}) : super(key: key);
 
   @override
   State<Overview> createState() => _OverviewState();
@@ -17,7 +19,7 @@ class _OverviewState extends State<Overview> {
     'Math 101A',
     'Physics',
   ];
-  final int barStatus = 50;
+  final int barStatus = 75;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class _OverviewState extends State<Overview> {
                 width: 400,
                 child: LiquidLinearProgressIndicator(
                   value: (barStatus / 100).toDouble(),
-                  valueColor: const AlwaysStoppedAnimation(Color(0xFF03BEFC)),
+                  valueColor: const AlwaysStoppedAnimation(Color(0xFF70C548)),
                   backgroundColor: Colors.white,
                   borderColor: const Color(0xFF022F3B),
                   borderWidth: 3.0,
@@ -57,7 +59,7 @@ class _OverviewState extends State<Overview> {
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.normal,
                         fontSize: 24,
-                        color: const Color(0xFFFA14AD)),
+                        color: const Color(0xFF000000)),
                   ),
                 ),
               ),
