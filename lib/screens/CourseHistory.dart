@@ -14,17 +14,7 @@ class CourseHistory extends StatefulWidget {
 }
 
 class _CourseHistoryState extends State<CourseHistory> {
-  List<String> courseList = [
-    'Engr 10',
-    'Intro to Java',
-    'Math 101A',
-    'Physics',
-    'butt',
-    'gho',
-    'bifenifr',
-    'fre',
-    'fre'
-  ];
+  List<String> courseList = [];
   String selectedCollege = "";
   String selectedCourse = "";
   final List<DropdownMenuItem> colleges = [
@@ -112,8 +102,17 @@ class _CourseHistoryState extends State<CourseHistory> {
                       itemBuilder: (BuildContext context, int index) {
                         return Transform.translate(
                           // adjust offset to change the list tile left to right spacing
-                          offset: const Offset(60, 0),
+                          offset: const Offset(20, 0),
                           child: ListTile(
+                            trailing: IconButton(
+                              color: const Color(0xFF2194D2),
+                              onPressed: () {
+                                setState(() {
+                                  courseList.remove(courseList[index]);
+                                });
+                              },
+                              icon: const Icon(Icons.close),
+                            ),
                             dense: true,
                             visualDensity: const VisualDensity(vertical: -3),
                             title: Text(
@@ -184,7 +183,16 @@ class _CourseHistoryState extends State<CourseHistory> {
               color: const Color(0xff1375CF),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(22.0)),
-              onPressed: () {},
+              onPressed: () {
+                if (selectedCollege != "" &&
+                    selectedCourse != "" &&
+                    !courseList.contains(selectedCourse)) {
+                  setState(() {
+                    courseList.add(selectedCourse);
+                    selectedCourse = "";
+                  });
+                }
+              },
               child: Text(
                 'Submit',
                 style: GoogleFonts.roboto(
