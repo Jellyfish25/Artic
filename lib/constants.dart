@@ -1,3 +1,4 @@
+import 'package:artic/screens/CourseHistory.dart';
 import 'package:artic/screens/ExploreMajors.dart';
 import 'package:artic/screens/Overview.dart';
 import 'package:flutter/material.dart';
@@ -128,7 +129,9 @@ SizedBox kNavBar = SizedBox(
         leading: const ClipRect(
             child: Icon(Icons.history, color: Colors.black, size: 40)),
         title: const KNavBarText(title: 'Course History'),
-        onTap: () {},
+        onTap: () {
+          Get.to(() => CourseHistory());
+        },
       ),
       const SizedBox(height: 160),
       ListTile(
