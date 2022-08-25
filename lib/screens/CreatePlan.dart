@@ -20,42 +20,57 @@ class _CreatePlanState extends State<CreatePlan> {
       resizeToAvoidBottomInset: true,
       appBar: const KAppBar(title: 'Create Plan'),
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
+        padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 20.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(
-                textAlign: TextAlign.left,
-                onChanged: (value) {},
-                decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Degree Name', labelText: 'Degree'),
-              ),
-              const SizedBox(height: 10.0),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                textAlign: TextAlign.left,
-                onChanged: (value) {},
-                decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'College/University',
-                    labelText: 'Current College/University'),
-              ),
+              const Align(
+                  alignment: Alignment.centerLeft, child: Text("Degree:")),
               const SizedBox(height: 10.0),
               TextField(
                 textAlign: TextAlign.left,
                 onChanged: (value) {},
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'College/University',
-                    labelText: 'Receive Degree At'),
+                    hintText: 'Degree Name',
+                    floatingLabelBehavior: FloatingLabelBehavior.always),
               ),
+              const SizedBox(height: 10.0),
+              const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Current College/University:")),
+              const SizedBox(height: 10.0),
+              TextField(
+                textAlign: TextAlign.left,
+                onChanged: (value) {},
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'College/University',
+                    floatingLabelBehavior: FloatingLabelBehavior.always),
+              ),
+              const SizedBox(height: 10.0),
+              const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Receive Degree At:")),
+              const SizedBox(height: 10.0),
+              TextField(
+                textAlign: TextAlign.left,
+                onChanged: (value) {},
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'College/University',
+                    floatingLabelBehavior: FloatingLabelBehavior.always),
+              ),
+              const SizedBox(height: 10.0),
+              const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Desired Units Per Term:")),
               const SizedBox(height: 10.0),
               TextField(
                 textAlign: TextAlign.left,
                 onChanged: (value) {},
                 decoration: kTextFieldDecoration.copyWith(
                     hintText: 'Desired Units',
-                    labelText: 'Desired Units Per Term'),
+                    floatingLabelBehavior: FloatingLabelBehavior.always),
               ),
-              const SizedBox(height: 270.0),
+              const SizedBox(height: 145.0),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: MaterialButton(
@@ -101,7 +116,7 @@ class _CreatePlanState extends State<CreatePlan> {
 showAlertDialog(BuildContext context) {
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(20.0))),
     title: const Center(
       child: Text(
@@ -113,7 +128,7 @@ showAlertDialog(BuildContext context) {
     ),
     content: SizedBox(
         width: 50,
-        height: 200,
+        height: 160,
         child: Column(
           children: const [
             Text(
@@ -132,19 +147,23 @@ showAlertDialog(BuildContext context) {
           ],
         )),
     actions: [
-      TextButton(
-        onPressed: () {
-          agreed = true;
-          Navigator.pushNamed(context, ViewPlan.id);
-        },
-        child: const Text("Agree"),
-      ),
-      TextButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: const Text("Disagree"),
-      ),
+      Row(
+        children: [
+          TextButton(
+            onPressed: () {
+              agreed = true;
+              Navigator.pushNamed(context, ViewPlan.id);
+            },
+            child: const Text("Agree"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Disagree"),
+          ),
+        ],
+      )
     ],
   );
 
