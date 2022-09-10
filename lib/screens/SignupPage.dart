@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../constants.dart';
+import '../data_classes/DatabaseHandler.dart';
 import '../screens/LoginScreen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -21,6 +22,7 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   Model model;
+  late DatabaseHandler dbHandler;
   bool showSpinner = false;
   String fullName = ''; // made these '' just to silence errors
   String email = '';
@@ -120,7 +122,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     onPressed: () async {
                       if (password == confirmPassword &&
                           !model.emailIsUsed(email)) {
-                        model.addUser(User(email, fullName, password));
+                        //model.addUser(User(email, fullName, password));
+                        dbHandler = DatabaseHandler();
+                        User currentUser = User(email, fullName, password);
+                        List<User> listOfUsers = [currentUser];
+                        dbHandler.insertUser(listOfUsers);
+                        List<User> dbList = await dbHandler.retrieveUsers();
+
+                        for (User x in dbList) {
+                          print(x.toString());
+                        }
                         Navigator.pushNamed(context, Overview.id);
                       } else {
                         // TODO: add error response for invalid user info
