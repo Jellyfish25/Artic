@@ -1,23 +1,31 @@
 import 'package:artic/components/rounded_button.dart';
 import 'package:artic/constants.dart';
+import 'package:artic/data_classes/Model.dart';
+import 'package:artic/data_classes/User.dart';
 import 'package:artic/screens/ForgotPassword.dart';
+import 'package:artic/screens/Overview.dart';
 import 'package:artic/screens/SignupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-import 'Overview.dart';
-
 class LoginScreen extends StatefulWidget {
+  final Model model;
   static const String id = 'login_screen';
+
+  const LoginScreen({Key? key, required this.model}) : super(key: key);
+
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState(model);
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  Model model;
   bool showSpinner = false;
   //final _auth = FirebaseAuth.instance;
   String email = ''; // made these '' just to silence errors
   String password = '';
+
+  _LoginScreenState(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -82,26 +90,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     title: 'Confirm',
                     color: const Color(0xFF1375CF),
                     onPressed: () async {
-                      setState(() {
-                        showSpinner = true;
-                      });
-
-                      try {
-                        final user = email; // filler code until DB is set up
-                        /*
-                      final user = await _auth.signInWithEmailAndPassword(
-                          email: email, password: password);
-                       */
-                        if (user != '') {
-                          Navigator.pushNamed(context, Overview.id);
-                        }
-
-                        setState(() {
-                          showSpinner = false;
-                        });
-                      } catch (e) {
-                        print(e);
+                      User? user;
+                      if ((user = model.searchForUser(email, password)) !=
+                          null) {
+                        model.setCurrentUser(user!);
+                        Navigator.pushNamed(context, Overview.id);
+                      } else {
+                        // TODO: add error response for invalid user credentials
                       }
+                      // setState(() {
+                      //   showSpinner = true;
+                      // });
+                      //
+                      // try {
+                      //   final user = email; // filler code until DB is set up
+                      //   /*
+                      // final user = await _auth.signInWithEmailAndPassword(
+                      //     email: email, password: password);
+                      //  */
+                      //   if (user != '') {
+                      //     Navigator.pushNamed(context, Overview.id);
+                      //   }
+                      //
+                      //   setState(() {
+                      //     showSpinner = false;
+                      //   });
+                      // } catch (e) {
+                      //   print(e);
+                      // }
                     },
                     height: 50.0,
                     width: 250.0),

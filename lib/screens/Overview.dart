@@ -5,6 +5,7 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import '../constants.dart';
 
 class Overview extends StatefulWidget {
+  //final Model model;
   static const String id = 'overview';
   const Overview({Key? key}) : super(key: key);
 
@@ -20,6 +21,8 @@ class _OverviewState extends State<Overview> {
     'Physics',
   ];
   final int barStatus = 75;
+
+  _OverviewState();
 
   @override
   Widget build(BuildContext context) {

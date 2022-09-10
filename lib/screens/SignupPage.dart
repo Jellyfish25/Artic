@@ -1,4 +1,6 @@
 import 'package:artic/components/rounded_button.dart';
+import 'package:artic/data_classes/Model.dart';
+import 'package:artic/data_classes/User.dart';
 import 'package:artic/screens/LoginScreen.dart';
 import 'package:artic/screens/Overview.dart';
 import 'package:flutter/material.dart';
@@ -8,19 +10,24 @@ import '../constants.dart';
 import '../screens/LoginScreen.dart';
 
 class SignupScreen extends StatefulWidget {
+  final Model model;
   static const String id = 'sign_up_screen';
-  const SignupScreen({Key? key}) : super(key: key);
+
+  const SignupScreen({Key? key, required this.model}) : super(key: key);
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SignupScreen> createState() => _SignupScreenState(model);
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  Model model;
   bool showSpinner = false;
   String fullName = ''; // made these '' just to silence errors
   String email = '';
   String password = ''; // made these '' just to silence errors
   String confirmPassword = '';
+
+  _SignupScreenState(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -111,26 +118,33 @@ class _SignupScreenState extends State<SignupScreen> {
                     title: 'Confirm',
                     color: const Color(0xFF1375CF),
                     onPressed: () async {
-                      setState(() {
-                        showSpinner = true;
-                      });
-
-                      try {
-                        final user = email; // filler code until DB is set up
-                        /*
-                      final user = await _auth.signInWithEmailAndPassword(
-                          email: email, password: password);
-                       */
-                        if (user != '') {
-                          Navigator.pushNamed(context, Overview.id);
-                        }
-
-                        setState(() {
-                          showSpinner = false;
-                        });
-                      } catch (e) {
-                        print(e);
+                      if (password == confirmPassword &&
+                          !model.emailIsUsed(email)) {
+                        model.addUser(User(email, fullName, password));
+                        Navigator.pushNamed(context, Overview.id);
+                      } else {
+                        // TODO: add error response for invalid user info
                       }
+                      // setState(() {
+                      //   showSpinner = true;
+                      // });
+                      //
+                      // try {
+                      //   final user = email; // filler code until DB is set up
+                      //   /*
+                      // final user = await _auth.signInWithEmailAndPassword(
+                      //     email: email, password: password);
+                      //  */
+                      //   if (user != '') {
+                      //     Navigator.pushNamed(context, Overview.id);
+                      //   }
+                      //
+                      //   setState(() {
+                      //     showSpinner = false;
+                      //   });
+                      // } catch (e) {
+                      //   print(e);
+                      // }
                     },
                     height: 50.0,
                     width: 250.0),
