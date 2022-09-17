@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:artic/data_classes/User.dart';
@@ -8,11 +9,11 @@ class DatabaseHandler {
     String path = await getDatabasesPath();
     return openDatabase(
       join(path, 'ARTIC.db'),
-      onCreate: (database, version) async {
-        await database.execute(
-          "CREATE TABLE user (email VARCHAR(30) PRIMARY KEY,full_name VARCHAR(50) NOT NULL,password VARCHAR(30) NOT NULL);",
-        );
-      },
+      // onCreate: (database, version) async {
+      //   await database.execute(
+      //     "CREATE TABLE user (email VARCHAR(30) PRIMARY KEY,fullName VARCHAR(50) NOT NULL,password VARCHAR(30) NOT NULL);",
+      //   );
+      // },
       version: 1,
     );
   }

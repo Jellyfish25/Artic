@@ -5,10 +5,12 @@ import 'package:artic/screens/LoginScreen.dart';
 import 'package:artic/screens/Overview.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../constants.dart';
 import '../data_classes/DatabaseHandler.dart';
 import '../screens/LoginScreen.dart';
+import '../data_classes/DatabaseHandler.dart';
 
 class SignupScreen extends StatefulWidget {
   final Model model;
@@ -128,6 +130,12 @@ class _SignupScreenState extends State<SignupScreen> {
                         List<User> listOfUsers = [currentUser];
                         dbHandler.insertUser(listOfUsers);
                         List<User> dbList = await dbHandler.retrieveUsers();
+
+                        final Database db =
+                            await DatabaseHandler().initializeDB();
+                        final List<Map<String, Object?>> swag =
+                            await db.query('plan');
+                        swag.forEach((row) => print(row));
 
                         for (User x in dbList) {
                           print(x.toString());

@@ -42,11 +42,11 @@ class User {
 
   User.fromMap(Map<String, dynamic> res)
       : email = res["email"],
-        fullName = res["full_name"],
+        fullName = res["fullName"],
         password = res["password"];
 
   Map<String, Object?> toMap() {
-    return {'email': email, 'full_name': fullName, 'password': password};
+    return {'email': email, 'fullName': fullName, 'password': password};
   }
 
   @override
