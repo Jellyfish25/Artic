@@ -127,8 +127,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         //model.addUser(User(email, fullName, password));
                         dbHandler = DatabaseHandler();
                         User currentUser = User(email, fullName, password);
-                        List<User> listOfUsers = [currentUser];
-                        dbHandler.insertUser(listOfUsers);
+                        dbHandler.insertUser(currentUser);
                         List<User> dbList = await dbHandler.retrieveUsers();
 
                         final Database db =

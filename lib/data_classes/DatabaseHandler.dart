@@ -19,13 +19,11 @@ class DatabaseHandler {
   }
 
   //insert a user to the database
-  Future<int> insertUser(List<User> users) async {
+  Future<int> insertUser(User user) async {
     print("inserted into database");
     int result = 0;
     final Database db = await initializeDB();
-    for (var user in users) {
-      result = await db.insert('user', user.toMap());
-    }
+    result = await db.insert('user', user.toMap());
     return result;
   }
 

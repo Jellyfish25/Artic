@@ -7,6 +7,9 @@ import 'package:artic/screens/Overview.dart';
 import 'package:artic/screens/SignupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:sqflite/sqflite.dart';
+
+import '../data_classes/DatabaseHandler.dart';
 
 class LoginScreen extends StatefulWidget {
   final Model model;
@@ -91,13 +94,33 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: const Color(0xFF1375CF),
                     onPressed: () async {
                       User? user;
-                      if ((user = model.searchForUser(email, password)) !=
-                          null) {
-                        model.setCurrentUser(user!);
-                        Navigator.pushNamed(context, Overview.id);
+                      final Database db =
+                          await DatabaseHandler().initializeDB();
+                      List<Map> emailList = await db.rawQuery(
+                          "SELECT * FROM user WHERE email = '$email'");
+                      if (emailList.isNotEmpty) {
+                        String dbPassword = emailList[0]["password"];
+                        if (dbPassword == password) {
+                          user =
+                              User(email, emailList[0]['fullName'], password);
+                          model.setCurrentUser(user);
+                          print(model.getCurrentUser());
+                          Navigator.pushNamed(context, Overview.id);
+                        } else {
+                          print("invalid password");
+                        }
                       } else {
-                        // TODO: add error response for invalid user credentials
+                        print("invalid email");
                       }
+
+                      //if(emailList.isNotEmpty && emailList['$email'])
+                      // if ((user = model.searchForUser(email, password)) !=
+                      //     null) {
+                      //   model.setCurrentUser(user!);
+                      //   Navigator.pushNamed(context, Overview.id);
+                      // } else {
+                      //   // TODO: add error response for invalid user credentials
+                      // }
                       // setState(() {
                       //   showSpinner = true;
                       // });
