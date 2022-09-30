@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:artic/data_classes/User.dart';
@@ -19,24 +18,24 @@ class DatabaseHandler {
   }
 
   //insert a user to the database
-  Future<int> insertUser(User user) async {
+  Future<int> insertUser(User user, Database db) async {
     print("inserted into database");
     int result = 0;
-    final Database db = await initializeDB();
+    //final Database db = await initializeDB();
     result = await db.insert('user', user.toMap());
     return result;
   }
 
   //retrieve from the database
-  Future<List<User>> retrieveUsers() async {
-    final Database db = await initializeDB();
+  Future<List<User>> retrieveUsers(Database db) async {
+    //final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('user');
     return queryResult.map((e) => User.fromMap(e)).toList();
   }
 
   //delete user from the database
-  Future<void> deleteUser(int id) async {
-    final db = await initializeDB();
+  Future<void> deleteUser(int id, Database db) async {
+    //final db = await initializeDB();
     await db.delete(
       'user',
       where: "email = ?",

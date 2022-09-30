@@ -23,7 +23,6 @@ class Artic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Model model = Model();
-    model.initializeWithTestData();
     return GetMaterialApp(
       home: const WelcomeScreen(),
       initialRoute: WelcomeScreen.id,

@@ -122,47 +122,19 @@ class _SignupScreenState extends State<SignupScreen> {
                     title: 'Confirm',
                     color: const Color(0xFF1375CF),
                     onPressed: () async {
-                      if (password == confirmPassword &&
-                          !model.emailIsUsed(email)) {
-                        //model.addUser(User(email, fullName, password));
-                        dbHandler = DatabaseHandler();
-                        User currentUser = User(email, fullName, password);
-                        dbHandler.insertUser(currentUser);
-                        List<User> dbList = await dbHandler.retrieveUsers();
-
-                        final Database db =
-                            await DatabaseHandler().initializeDB();
-                        final List<Map<String, Object?>> swag =
-                            await db.query('plan');
-                        swag.forEach((row) => print(row));
-
-                        for (User x in dbList) {
-                          print(x.toString());
-                        }
+                      if (await model.emailIsAvailable(email) && password == confirmPassword) {
+                        model.addUser(email, fullName, password);
+                        model.setCurrentUser(email);
                         Navigator.pushNamed(context, Overview.id);
-                      } else {
-                        // TODO: add error response for invalid user info
                       }
-                      // setState(() {
-                      //   showSpinner = true;
-                      // });
-                      //
-                      // try {
-                      //   final user = email; // filler code until DB is set up
-                      //   /*
-                      // final user = await _auth.signInWithEmailAndPassword(
-                      //     email: email, password: password);
-                      //  */
-                      //   if (user != '') {
-                      //     Navigator.pushNamed(context, Overview.id);
-                      //   }
-                      //
-                      //   setState(() {
-                      //     showSpinner = false;
-                      //   });
-                      // } catch (e) {
-                      //   print(e);
-                      // }
+                      else if (password != confirmPassword) {
+                        print("Error: password does not match.\n");
+                        //TODO: make error visible from UI
+                      }
+                      else {
+                        print("Error: email is unavailable.\n");
+                        //TODO: make error visible from UI
+                      }
                     },
                     height: 50.0,
                     width: 250.0),

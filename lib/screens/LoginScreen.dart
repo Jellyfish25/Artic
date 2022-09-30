@@ -93,54 +93,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     title: 'Confirm',
                     color: const Color(0xFF1375CF),
                     onPressed: () async {
-                      User? user;
-                      final Database db =
-                          await DatabaseHandler().initializeDB();
-                      List<Map> emailList = await db.rawQuery(
-                          "SELECT * FROM user WHERE email = '$email'");
-                      if (emailList.isNotEmpty) {
-                        String dbPassword = emailList[0]["password"];
-                        if (dbPassword == password) {
-                          user =
-                              User(email, emailList[0]['fullName'], password);
-                          model.setCurrentUser(user);
-                          print(model.getCurrentUser());
-                          Navigator.pushNamed(context, Overview.id);
-                        } else {
-                          print("invalid password");
-                        }
-                      } else {
-                        print("invalid email");
+                      if (await model.userIsValid(email, password)) {
+                        model.setCurrentUser(email);
+                        Navigator.pushNamed(context, Overview.id);
                       }
-
-                      //if(emailList.isNotEmpty && emailList['$email'])
-                      // if ((user = model.searchForUser(email, password)) !=
-                      //     null) {
-                      //   model.setCurrentUser(user!);
-                      //   Navigator.pushNamed(context, Overview.id);
-                      // } else {
-                      //   // TODO: add error response for invalid user credentials
-                      // }
-                      // setState(() {
-                      //   showSpinner = true;
-                      // });
-                      //
-                      // try {
-                      //   final user = email; // filler code until DB is set up
-                      //   /*
-                      // final user = await _auth.signInWithEmailAndPassword(
-                      //     email: email, password: password);
-                      //  */
-                      //   if (user != '') {
-                      //     Navigator.pushNamed(context, Overview.id);
-                      //   }
-                      //
-                      //   setState(() {
-                      //     showSpinner = false;
-                      //   });
-                      // } catch (e) {
-                      //   print(e);
-                      // }
+                      else {
+                        print("Error: email or password is invalid.");
+                        //TODO: make this error message visible from UI
+                      }
                     },
                     height: 50.0,
                     width: 250.0),
