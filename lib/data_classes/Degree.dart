@@ -1,51 +1,51 @@
 class Degree {
-  String deg_id;
+  String degID;
   String major;
-  String deg_type;
-  double total_units;
+  String degType;
+  double totalUnits;
 
-  Degree(this.deg_id, this.major, this.deg_type, this.total_units);
+  Degree(this.degID, this.major, this.degType, this.totalUnits);
 
   String getDegID() {
-    return deg_id;
+    return degID;
   }
   String getMajor() {
     return major;
   }
   String getDegType() {
-    return deg_type;
+    return degType;
   }
   double getTotalUnits() {
-    return total_units;
+    return totalUnits;
   }
   void setDegID(String id) {
-    deg_id = id;
+    degID = id;
   }
   void setMajor(String maj) {
     major = maj;
   }
   void setDegType(String type) {
-    deg_type = type;
+    degType = type;
   }
   void setTotalUnits(double units) {
-    total_units = units;
+    totalUnits = units;
   }
 
   Degree.fromMap(Map<String, dynamic> res)
-    : deg_id = res["deg_id"],
+    : degID = res["deg_id"],
       major = res["major"],
-      deg_type = res["deg_type"],
-      total_units = res["total_units"];
+      degType = res["deg_type"],
+      totalUnits = res["total_units"];
 
   Map<String, Object?> toMap() {
-      return {'deg_id': deg_id,
+      return {'deg_id': degID,
               'major': major,
-              'deg_type': deg_type,
-              'total_units': total_units};
+              'deg_type': degType,
+              'total_units': totalUnits};
   }
 
   @override
   String toString() {
-    return 'Degree{deg_id: $deg_id, major: $major, deg_type: $deg_type, total_units: $total_units}';
+    return 'Degree{deg_id: $degID, major: $major, deg_type: $degType, total_units: $totalUnits}';
   }
 }
