@@ -7,7 +7,7 @@ class DatabaseHandler {
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
-      join(path, 'ARTIC.db'),
+      join(path, 'artic.db'),
       // onCreate: (database, version) async {
       //   await database.execute(
       //     "CREATE TABLE user (email VARCHAR(30) PRIMARY KEY,fullName VARCHAR(50) NOT NULL,password VARCHAR(30) NOT NULL);",

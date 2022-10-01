@@ -30,6 +30,8 @@ class Model {
 
   Future<void> setCurrentUser(String email) async {
     List<Map<String, Object?>> emailList = await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
+    List<Map<String, Object?>> courseTest = await _db.rawQuery("SELECT * FROM course WHERE course_title = 'Software Engineering I'");
+    print(courseTest[0]);
     _currentUser = emailList.map((e) => User.fromMap(e)).toList()[0];
     print(_currentUser.toString());
   }
