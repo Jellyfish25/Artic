@@ -1,48 +1,48 @@
 class School {
-  String _school_id;
-  String _s_name;
-  String _location;
-  String _s_type;
+  String schoolID;
+  String sName;
+  String location;
+  String sType;
 
-  School(this._school_id, this._s_name, this._location, this._s_type);
+  School(this.schoolID, this.sName, this.location, this.sType);
 
   String getSchoolID() {
-    return _school_id;
+    return schoolID;
   }
 
-  String getSType() => _s_type;
+  String getSType() => sType;
 
   void setSType(String value) {
-    _s_type = value;
+    sType = value;
   }
 
-  String getLocation() => _location;
+  String getLocation() => location;
 
   void setLocation(String value) {
-    _location = value;
+    location = value;
   }
 
-  String getSName() => _s_name;
+  String getSName() => sName;
 
   void setSName(String value) {
-    _s_name = value;
+    sName = value;
   }
 
   void setSchoolID(String value) {
-    _school_id = value;
+    schoolID = value;
   }
   School.fromMap(Map<String, dynamic> res) :
-        _school_id = res["school_id"],
-        _s_name = res["s_name"],
-        _location = res["location"],
-        _s_type = res["s_type"];
+        schoolID = res["school_id"],
+        sName = res["s_name"],
+        location = res["location"],
+        sType = res["s_type"];
   Map<String, Object?> toMap() {
-    return {'school_id': _school_id, 's_name': _s_name, 'location': _location,
-    's_type': _s_type};
+    return {'school_id': schoolID, 's_name': sName, 'location': location,
+    's_type': sType};
   }
 
   @override
   String toString() {
-    return 'School{_school_id: $_school_id, _s_name: $_s_name, _location: $_location, _s_type: $_s_type}';
+    return 'School{_school_id: $schoolID, _s_name: $sName, _location: $location, _s_type: $sType}';
   }
 }

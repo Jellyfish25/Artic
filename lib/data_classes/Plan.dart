@@ -51,5 +51,6 @@ class Plan{
   @override
   String toString() {
     return 'Plan{_plan_id: $planID, _date_created: $dateCreated, _owner: $owner, _school_id: $schoolID, _deg_name: $degName}';
+
   }
 }
