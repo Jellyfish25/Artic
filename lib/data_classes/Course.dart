@@ -3,7 +3,7 @@
 /// or updating a Course's information. The classes that use Course will be
 /// responsible for this.
 class Course {
-  String institution_code;
+  String school_id;
   String course_prefix;
   String course_number;
   String begin_term;
@@ -14,10 +14,10 @@ class Course {
   String unit_type;
 
   /// Constructs a Course.
-  Course(this.institution_code, this.course_prefix, this.course_number, this.begin_term, this.end_term, this.course_title, this.course_units_min, this.course_units_max, this.unit_type);
+  Course(this.school_id, this.course_prefix, this.course_number, this.begin_term, this.end_term, this.course_title, this.course_units_min, this.course_units_max, this.unit_type);
 
   String getInstitutionCode() {
-    return institution_code;
+    return school_id;
   }
   String getCourseID() {
     return course_prefix + course_number;
@@ -41,7 +41,7 @@ class Course {
     return unit_type;
   }
   void setInstitutionCode(String code) {
-    institution_code = code;
+    school_id = code;
   }
 
   void setCourseID(String coursePrefix, String courseNumber) {
@@ -68,7 +68,7 @@ class Course {
   }
 
   Course.fromMap(Map<String, dynamic> res)
-      : institution_code = res["institution_code"],
+      : school_id = res["school_id"],
         course_prefix = res["course_prefix"],
         course_number = res["course_number"],
         begin_term = res["begin_term"],
@@ -79,7 +79,7 @@ class Course {
         unit_type = res["unit_type"];
 
   Map<String, Object?> toMap() {
-    return {'institution_code': institution_code,
+    return {'school_id': school_id,
             'course_prefix': course_prefix,
             'course_number': course_number,
             'begin_term': begin_term,
@@ -92,7 +92,7 @@ class Course {
 
   @override
   String toString() {
-    return 'Course{institution_code: $institution_code, '
+    return 'Course{school_id: $school_id, '
         'course_ID: $course_prefix$course_number, '
         'begin_term: $begin_term, '
         'end_term: $end_term, '

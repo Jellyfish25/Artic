@@ -1,31 +1,55 @@
 class Plan{
-  String _plan_id;
-  String _date_created;
+  String planID;
+  String dateCreated;
+  String owner;
+  String schoolID;
+  String degName;
 
-  Plan(this._plan_id, this._date_created);
+  Plan(this.planID, this.dateCreated, this.owner, this.schoolID, this.degName);
 
-  String getPlanID() => _plan_id;
+  String getPlanID() => planID;
 
-  String getDateCreated() => _date_created;
+  String getDateCreated() => dateCreated;
+
+  String getOwner() => owner;
+
+  String getSchoolID() => schoolID;
+
+  String getDegName() => degName;
 
   void setDateCreated(String value) {
-    _date_created = value;
+    dateCreated = value;
   }
 
   void setPlanID(String value) {
-    _plan_id = value;
+    planID = value;
+  }
+
+  void setOwner(String value) {
+    owner = value;
+  }
+
+  void setSchoolID(String value) {
+    schoolID = value;
+  }
+
+  void getPlanDegName(String value) {
+    degName = value;
   }
 
   Plan.fromMap(Map<String, dynamic> res) :
-      _plan_id = res["plan_id"],
-      _date_created = res["date_created"];
+      planID = res["plan_id"],
+      dateCreated = res["date_created"],
+      owner = res["owner"],
+      schoolID = res["school_id"],
+      degName = res["deg_name"];
 
   Map<String, Object?> toMap() {
-    return {'plan_id': _plan_id, "date_created": _date_created};
+    return {'plan_id': planID, "date_created": dateCreated, 'owner': owner, 'school_id': schoolID, 'deg_name': degName};
   }
 
   @override
   String toString() {
-    return 'Plan{_plan_id: $_plan_id, _date_created: $_date_created}';
+    return 'Plan{_plan_id: $planID, _date_created: $dateCreated, _owner: $owner, _school_id: $schoolID, _deg_name: $degName}';
   }
 }
