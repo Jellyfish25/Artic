@@ -1,5 +1,6 @@
 import 'package:artic/components/rounded_button.dart';
 import 'package:artic/constants.dart';
+import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:search_choices/search_choices.dart';
@@ -7,13 +8,20 @@ import 'package:search_choices/search_choices.dart';
 import 'Overview.dart';
 
 class ExploreMajors extends StatefulWidget {
+  final Model model;
   static const String id = 'explore_majors';
+
+  const ExploreMajors({Key? key, required this.model}) : super(key: key);
+
   @override
-  _ExploreMajorsState createState() => _ExploreMajorsState();
+  _ExploreMajorsState createState() => _ExploreMajorsState(model);
 }
 
 class _ExploreMajorsState extends State<ExploreMajors> {
+  Model model;
   bool showSpinner = false;
+
+  _ExploreMajorsState(this.model);
 
   // Tester data for searchable dropdown
   List<int> selectedColleges = [];
@@ -57,7 +65,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-      appBar: const KAppBar(title: "Explore Majors"),
+      appBar: KAppBar(title: "Explore Majors", model: model),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10.0),
         child: ModalProgressHUD(
@@ -176,7 +184,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
           ),
         ),
       ),
-      drawer: kNavBar,
+      drawer: getKNavBar(model),
     );
   }
 }

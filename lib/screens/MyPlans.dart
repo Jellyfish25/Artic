@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants.dart';
+import '../data_classes/Model.dart';
 import 'CreatePlan.dart';
 
 class MyPlans extends StatefulWidget {
+  final Model model;
   static const String id = 'myplans';
+  const MyPlans({Key? key, required this.model}) : super(key: key);
 
   @override
-  State<MyPlans> createState() => _MyPlansState();
+  State<MyPlans> createState() => _MyPlansState(model);
 }
 
 class _MyPlansState extends State<MyPlans> {
+  Model model;
   List<String> plans = [
     'B.S in CMPE - SJSU',
     'B.S in PHIL - SJSU',
@@ -28,13 +32,15 @@ class _MyPlansState extends State<MyPlans> {
   int favoriteIndex = -1;
   String favoritePlan = '';
 
+  _MyPlansState(this.model);
+
   @override
   Widget build(BuildContext context) {
     int plansLength = plans.length;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: const KAppBar(title: "My Plans"),
+      appBar: KAppBar(title: "My Plans", model: model),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -145,7 +151,7 @@ class _MyPlansState extends State<MyPlans> {
           ],
         ),
       ),
-      drawer: kNavBar,
+      drawer: getKNavBar(model),
     );
   }
 }

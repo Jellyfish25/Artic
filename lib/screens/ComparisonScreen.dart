@@ -4,18 +4,21 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants.dart';
-import 'Overview.dart';
+import '../data_classes/Model.dart';
 
 class ComparisonScreen extends StatelessWidget {
+  final Model model;
   static const String id = 'CompareDegree';
-
   int count = 0;
+
+  ComparisonScreen(this.model);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const KAppBar(
+      appBar: KAppBar(
         title: 'Compare Degrees',
+        model: model,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -252,7 +255,7 @@ class ComparisonScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(22.0)),
                 onPressed: () {
                   indexes.clear();
-                  Get.to(() => CompareDegree());
+                  Get.to(() => CompareDegree(model: model));
                 },
                 child: Text(
                   'Back',
@@ -268,7 +271,7 @@ class ComparisonScreen extends StatelessWidget {
           ],
         ),
       ),
-      drawer: kNavBar,
+      drawer: getKNavBar(model),
     );
   }
 }

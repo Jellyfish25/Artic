@@ -1,3 +1,4 @@
+import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
@@ -5,15 +6,16 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import '../constants.dart';
 
 class Overview extends StatefulWidget {
-  //final Model model;
+  final Model model;
   static const String id = 'overview';
-  const Overview({Key? key}) : super(key: key);
+  const Overview({Key? key, required this.model}) : super(key: key);
 
   @override
-  State<Overview> createState() => _OverviewState();
+  State<Overview> createState() => _OverviewState(model);
 }
 
 class _OverviewState extends State<Overview> {
+  Model model;
   List<String> courseList = [
     'Engr 10',
     'Intro to Java',
@@ -22,12 +24,12 @@ class _OverviewState extends State<Overview> {
   ];
   final int barStatus = 75;
 
-  _OverviewState();
+  _OverviewState(this.model);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const KAppBar(title: 'Overview'),
+      appBar: KAppBar(title: 'Overview', model: model),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -151,7 +153,7 @@ class _OverviewState extends State<Overview> {
           ),
         ),
       ),
-      drawer: kNavBar,
+      drawer: getKNavBar(model),
     );
   }
 }

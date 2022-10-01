@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'data_classes/Model.dart';
 import 'screens/CompareDegree.dart';
 // screens
 import 'screens/MyPlans.dart';
@@ -44,129 +45,255 @@ const kTextFieldDecoration = InputDecoration(
   ),
 );
 
+SizedBox getKNavBar(Model model) {
+  SizedBox kNavBar = SizedBox(
+    width: 240,
+    child: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            SizedBox(
+              height: 90,
+              child: DrawerHeader(
+                margin: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                padding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  verticalDirection: VerticalDirection.up,
+                  children: [
+                    Material(
+                      borderRadius: BorderRadius.circular(101),
+                      elevation: 5,
+                      child: const CircleAvatar(
+                        backgroundImage: AssetImage('images/IceCube.png'),
+                        radius: 20,
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'ARTIC',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 36,
+                        color: const Color(0xff1375CF),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const Divider(
+              thickness: 1,
+              color: Colors.grey,
+            ),
+            const SizedBox(height: 5),
+            ListTile(
+              //note: can decrease spacing by adding density
+              // dense: true,
+              // visualDensity: const VisualDensity(vertical: -3),
+              leading: kHomeIcon,
+              title: const KNavBarText(title: 'Overview'),
+              onTap: () {
+                Get.to(() => Overview(model: model));
+              },
+            ),
+            ListTile(
+              leading: const ClipRect(
+                  child: Icon(Icons.compare_arrows, color: Colors.black, size: 40)),
+              title: const KNavBarText(title: 'Compare Plans'),
+              onTap: () {
+                indexes.clear();
+                Get.to(() => CompareDegree(model: model));
+              },
+            ),
+            ListTile(
+              leading: const ClipRect(
+                  child: Icon(Icons.search, color: Colors.black, size: 40)),
+              title: const KNavBarText(title: 'Explore Majors'),
+              onTap: () {
+                Get.to(() => ExploreMajors(model: model));
+              },
+            ),
+            ListTile(
+              leading: const ClipRect(
+                  child: Icon(Icons.task, color: Colors.black, size: 40)),
+              title: const KNavBarText(title: 'My Plans'),
+              onTap: () {
+                Get.to(() => MyPlans(model: model));
+              },
+            ),
+            ListTile(
+              leading: const ClipRect(
+                  child: Icon(Icons.history, color: Colors.black, size: 40)),
+              title: const KNavBarText(title: 'Course History'),
+              onTap: () {
+                Get.to(() => CourseHistory(model: model));
+              },
+            ),
+            const SizedBox(height: 160),
+            ListTile(
+              dense: true,
+              visualDensity: const VisualDensity(vertical: -3),
+              title: const KNavBarText(
+                title: "How do I use this app?",
+                fontColor: Color(0xFF007BFF),
+                decoration: TextDecoration.underline,
+              ),
+              onTap: () {},
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            const Divider(
+              thickness: 1,
+              color: Colors.grey,
+            ),
+            ListTile(
+                dense: true,
+                visualDensity: const VisualDensity(vertical: -3),
+                title: const KNavBarText(title: "Sign Out"),
+                onTap: () {
+                  Get.to(() => const WelcomeScreen());
+                }),
+            ListTile(
+              dense: true,
+              visualDensity: const VisualDensity(vertical: -3),
+              title: const KNavBarText(title: "Edit Account"),
+              onTap: () {},
+            )
+          ],
+        )),
+  );
+  return kNavBar;
+}
+
 // Navigation bar
-SizedBox kNavBar = SizedBox(
-  width: 240,
-  child: Drawer(
-      child: ListView(
-    padding: EdgeInsets.zero,
-    children: [
-      SizedBox(
-        height: 90,
-        child: DrawerHeader(
-          margin: const EdgeInsets.only(top: 0.0, bottom: 0.0),
-          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 10.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            verticalDirection: VerticalDirection.up,
-            children: [
-              Material(
-                borderRadius: BorderRadius.circular(101),
-                elevation: 5,
-                child: const CircleAvatar(
-                  backgroundImage: AssetImage('images/IceCube.png'),
-                  radius: 20,
-                  backgroundColor: Colors.white,
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                'ARTIC',
-                style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w700,
-                  fontStyle: FontStyle.normal,
-                  fontSize: 36,
-                  color: const Color(0xff1375CF),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      const Divider(
-        thickness: 1,
-        color: Colors.grey,
-      ),
-      const SizedBox(height: 5),
-      ListTile(
-        //note: can decrease spacing by adding density
-        // dense: true,
-        // visualDensity: const VisualDensity(vertical: -3),
-        leading: kHomeIcon,
-        title: const KNavBarText(title: 'Overview'),
-        onTap: () {
-          Get.to(() => Overview());
-        },
-      ),
-      ListTile(
-        leading: const ClipRect(
-            child: Icon(Icons.compare_arrows, color: Colors.black, size: 40)),
-        title: const KNavBarText(title: 'Compare Plans'),
-        onTap: () {
-          indexes.clear();
-          Get.to(() => CompareDegree());
-        },
-      ),
-      ListTile(
-        leading: const ClipRect(
-            child: Icon(Icons.search, color: Colors.black, size: 40)),
-        title: const KNavBarText(title: 'Explore Majors'),
-        onTap: () {
-          Get.to(() => ExploreMajors());
-        },
-      ),
-      ListTile(
-        leading: const ClipRect(
-            child: Icon(Icons.task, color: Colors.black, size: 40)),
-        title: const KNavBarText(title: 'My Plans'),
-        onTap: () {
-          Get.to(() => MyPlans());
-        },
-      ),
-      ListTile(
-        leading: const ClipRect(
-            child: Icon(Icons.history, color: Colors.black, size: 40)),
-        title: const KNavBarText(title: 'Course History'),
-        onTap: () {
-          Get.to(() => CourseHistory());
-        },
-      ),
-      const SizedBox(height: 160),
-      ListTile(
-        dense: true,
-        visualDensity: const VisualDensity(vertical: -3),
-        title: const KNavBarText(
-          title: "How do I use this app?",
-          fontColor: Color(0xFF007BFF),
-          decoration: TextDecoration.underline,
-        ),
-        onTap: () {},
-      ),
-      const SizedBox(
-        height: 5,
-      ),
-      const Divider(
-        thickness: 1,
-        color: Colors.grey,
-      ),
-      ListTile(
-          dense: true,
-          visualDensity: const VisualDensity(vertical: -3),
-          title: const KNavBarText(title: "Sign Out"),
-          onTap: () {
-            Get.to(() => const WelcomeScreen());
-          }),
-      ListTile(
-        dense: true,
-        visualDensity: const VisualDensity(vertical: -3),
-        title: const KNavBarText(title: "Edit Account"),
-        onTap: () {},
-      )
-    ],
-  )),
-);
+// SizedBox kNavBar = SizedBox(
+//   width: 240,
+//   child: Drawer(
+//       child: ListView(
+//     padding: EdgeInsets.zero,
+//     children: [
+//       SizedBox(
+//         height: 90,
+//         child: DrawerHeader(
+//           margin: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+//           padding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 10.0),
+//           child: Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             verticalDirection: VerticalDirection.up,
+//             children: [
+//               Material(
+//                 borderRadius: BorderRadius.circular(101),
+//                 elevation: 5,
+//                 child: const CircleAvatar(
+//                   backgroundImage: AssetImage('images/IceCube.png'),
+//                   radius: 20,
+//                   backgroundColor: Colors.white,
+//                 ),
+//               ),
+//               const SizedBox(
+//                 width: 10,
+//               ),
+//               Text(
+//                 'ARTIC',
+//                 style: GoogleFonts.roboto(
+//                   fontWeight: FontWeight.w700,
+//                   fontStyle: FontStyle.normal,
+//                   fontSize: 36,
+//                   color: const Color(0xff1375CF),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//       const Divider(
+//         thickness: 1,
+//         color: Colors.grey,
+//       ),
+//       const SizedBox(height: 5),
+//       ListTile(
+//         //note: can decrease spacing by adding density
+//         // dense: true,
+//         // visualDensity: const VisualDensity(vertical: -3),
+//         leading: kHomeIcon,
+//         title: const KNavBarText(title: 'Overview'),
+//         onTap: () {
+//           Get.to(() => Overview());
+//         },
+//       ),
+//       ListTile(
+//         leading: const ClipRect(
+//             child: Icon(Icons.compare_arrows, color: Colors.black, size: 40)),
+//         title: const KNavBarText(title: 'Compare Plans'),
+//         onTap: () {
+//           indexes.clear();
+//           Get.to(() => CompareDegree());
+//         },
+//       ),
+//       ListTile(
+//         leading: const ClipRect(
+//             child: Icon(Icons.search, color: Colors.black, size: 40)),
+//         title: const KNavBarText(title: 'Explore Majors'),
+//         onTap: () {
+//           Get.to(() => ExploreMajors());
+//         },
+//       ),
+//       ListTile(
+//         leading: const ClipRect(
+//             child: Icon(Icons.task, color: Colors.black, size: 40)),
+//         title: const KNavBarText(title: 'My Plans'),
+//         onTap: () {
+//           Get.to(() => MyPlans());
+//         },
+//       ),
+//       ListTile(
+//         leading: const ClipRect(
+//             child: Icon(Icons.history, color: Colors.black, size: 40)),
+//         title: const KNavBarText(title: 'Course History'),
+//         onTap: () {
+//           Get.to(() => CourseHistory());
+//         },
+//       ),
+//       const SizedBox(height: 160),
+//       ListTile(
+//         dense: true,
+//         visualDensity: const VisualDensity(vertical: -3),
+//         title: const KNavBarText(
+//           title: "How do I use this app?",
+//           fontColor: Color(0xFF007BFF),
+//           decoration: TextDecoration.underline,
+//         ),
+//         onTap: () {},
+//       ),
+//       const SizedBox(
+//         height: 5,
+//       ),
+//       const Divider(
+//         thickness: 1,
+//         color: Colors.grey,
+//       ),
+//       ListTile(
+//           dense: true,
+//           visualDensity: const VisualDensity(vertical: -3),
+//           title: const KNavBarText(title: "Sign Out"),
+//           onTap: () {
+//             Get.to(() => const WelcomeScreen());
+//           }),
+//       ListTile(
+//         dense: true,
+//         visualDensity: const VisualDensity(vertical: -3),
+//         title: const KNavBarText(title: "Edit Account"),
+//         onTap: () {},
+//       )
+//     ],
+//   )),
+// );
 
 //Helper class for kNavBar
 class KNavBarText extends StatelessWidget {
@@ -210,8 +337,9 @@ Container kHomeIcon = Container(
 
 // App bar constant (top of each page)
 class KAppBar extends StatelessWidget with PreferredSizeWidget {
+  final Model model;
   final String title;
-  const KAppBar({super.key, required this.title});
+  const KAppBar({super.key, required this.title, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +381,7 @@ class KAppBar extends StatelessWidget with PreferredSizeWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Get.to(() => Overview());
+            Get.to(() => Overview(model: model));
           },
           child: kHomeIcon,
         )

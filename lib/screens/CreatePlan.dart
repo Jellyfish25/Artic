@@ -1,3 +1,4 @@
+import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants.dart';
@@ -6,19 +7,24 @@ import 'ViewPlan.dart';
 bool agreed = false;
 
 class CreatePlan extends StatefulWidget {
+  final Model model;
   static const String id = 'CreatePlan';
-  const CreatePlan({Key? key}) : super(key: key);
+  const CreatePlan({Key? key, required this.model}) : super(key: key);
 
   @override
-  State<CreatePlan> createState() => _CreatePlanState();
+  State<CreatePlan> createState() => _CreatePlanState(model);
 }
 
 class _CreatePlanState extends State<CreatePlan> {
+  Model model;
+
+  _CreatePlanState(this.model);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: const KAppBar(title: 'Create Plan'),
+      appBar: KAppBar(title: 'Create Plan', model: model),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 20.0),
         child: SingleChildScrollView(
@@ -108,7 +114,7 @@ class _CreatePlanState extends State<CreatePlan> {
           ),
         ),
       ),
-      drawer: kNavBar,
+      drawer: getKNavBar(model),
     );
   }
 }

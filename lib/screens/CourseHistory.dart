@@ -1,3 +1,4 @@
+import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,14 +7,16 @@ import 'package:search_choices/search_choices.dart';
 import '../constants.dart';
 
 class CourseHistory extends StatefulWidget {
+  final Model model;
   static const String id = 'courseHistory';
-  const CourseHistory({Key? key}) : super(key: key);
+  const CourseHistory({Key? key, required this.model}) : super(key: key);
 
   @override
-  State createState() => _CourseHistoryState();
+  State createState() => _CourseHistoryState(model);
 }
 
 class _CourseHistoryState extends State<CourseHistory> {
+  Model model;
   List<String> courseList = [];
   String selectedCollege = "";
   String selectedCourse = "";
@@ -58,10 +61,12 @@ class _CourseHistoryState extends State<CourseHistory> {
     "": []
   };
 
+  _CourseHistoryState(this.model);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const KAppBar(title: 'Course History'),
+      appBar: KAppBar(title: 'Course History', model: model),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -206,7 +211,7 @@ class _CourseHistoryState extends State<CourseHistory> {
           ],
         ),
       ),
-      drawer: kNavBar,
+      drawer: getKNavBar(model),
     );
   }
 }

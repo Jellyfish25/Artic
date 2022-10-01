@@ -3,24 +3,31 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constants.dart';
+import '../data_classes/Model.dart';
 import 'ComparisonScreen.dart';
 
 class CompareDegree extends StatefulWidget {
+  final Model model;
+  const CompareDegree({Key? key, required this.model}) : super(key: key);
+
   @override
-  _CompareDegreeState createState() => _CompareDegreeState();
+  _CompareDegreeState createState() => _CompareDegreeState(model);
   static const String id = 'CompareDegree';
 }
 
 class _CompareDegreeState extends State<CompareDegree> {
-  List<int> _selectedItems = <int>[];
-
+  Model model;
+  final List<int> _selectedItems = <int>[];
   int count = 0;
+
+  _CompareDegreeState(this.model);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const KAppBar(
+      appBar: KAppBar(
         title: 'Compare Degrees',
+        model: model,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -119,7 +126,7 @@ class _CompareDegreeState extends State<CompareDegree> {
                     borderRadius: BorderRadius.circular(22.0)),
                 onPressed: () {
                   count == 2
-                      ? Get.to(() => ComparisonScreen())
+                      ? Get.to(() => ComparisonScreen(model))
                       : showAlertDialog(context);
                 },
                 child: Text(
@@ -136,7 +143,7 @@ class _CompareDegreeState extends State<CompareDegree> {
           ],
         ),
       ),
-      drawer: kNavBar,
+      drawer: getKNavBar(model),
     );
   }
 }
@@ -152,8 +159,8 @@ showAlertDialog(BuildContext context) {
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
-    title: Text("Error"),
-    content: Text("Please select 2 degree plans"),
+    title: const Text("Error"),
+    content: const Text("Please select 2 degree plans"),
     actions: [
       okButton,
     ],
