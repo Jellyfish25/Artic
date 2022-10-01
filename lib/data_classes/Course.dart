@@ -3,7 +3,8 @@
 /// or updating a Course's information. The classes that use Course will be
 /// responsible for this.
 class Course {
-  String institutionCode;
+
+  String schoolID;
   String coursePrefix;
   String courseNumber;
   String beginTerm;
@@ -14,10 +15,10 @@ class Course {
   String unitType;
 
   /// Constructs a Course.
-  Course(this.institutionCode, this.coursePrefix, this.courseNumber, this.beginTerm, this.endTerm, this.courseTitle, this.courseUnitsMin, this.courseUnitsMax, this.unitType);
+  Course(this.schoolID, this.coursePrefix, this.courseNumber, this.beginTerm, this.endTerm, this.courseTitle, this.courseUnitsMin, this.courseUnitsMax, this.unitType);
 
-  String getInstitutionCode() {
-    return institutionCode;
+  String getschoolID() {
+    return schoolID;
   }
   String getCourseID() {
     return coursePrefix + courseNumber;
@@ -40,8 +41,8 @@ class Course {
   String getUnitType() {
     return unitType;
   }
-  void setInstitutionCode(String code) {
-    institutionCode = code;
+  void setSchoolID(String code) {
+    schoolID = code;
   }
 
   void setCourseID(String coursePrefix, String courseNumber) {
@@ -68,7 +69,7 @@ class Course {
   }
 
   Course.fromMap(Map<String, dynamic> res)
-      : institutionCode = res["institution_code"],
+      : schoolID = res["school_id"],
         coursePrefix = res["course_prefix"],
         courseNumber = res["course_number"],
         beginTerm = res["begin_term"],
@@ -79,7 +80,7 @@ class Course {
         unitType = res["unit_type"];
 
   Map<String, Object?> toMap() {
-    return {'institution_code': institutionCode,
+    return {'school_id': schoolID,
             'course_prefix': coursePrefix,
             'course_number': courseNumber,
             'begin_term': beginTerm,
@@ -92,7 +93,7 @@ class Course {
 
   @override
   String toString() {
-    return 'Course{institutionCode: $institutionCode, '
+    return 'Course{schoolID: $schoolID, '
         'courseID: $coursePrefix$courseNumber, '
         'beginTerm: $beginTerm, '
         'endTerm: $endTerm, '
