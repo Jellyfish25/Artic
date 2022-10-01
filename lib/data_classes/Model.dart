@@ -35,7 +35,7 @@ class Model {
   }
 
   void addUser(String email, String fullName, String password) {
-    DatabaseHandler().insertUser(User(email, fullName, password), _db);
+    _handler.insertUser(User(email, fullName, password), _db);
   }
 
   Future<bool> emailIsAvailable(String email) async {

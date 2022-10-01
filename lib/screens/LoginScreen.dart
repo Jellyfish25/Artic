@@ -1,20 +1,15 @@
 import 'package:artic/components/rounded_button.dart';
 import 'package:artic/constants.dart';
 import 'package:artic/data_classes/Model.dart';
-import 'package:artic/data_classes/User.dart';
 import 'package:artic/screens/ForgotPassword.dart';
 import 'package:artic/screens/Overview.dart';
 import 'package:artic/screens/SignupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:sqflite/sqflite.dart';
-
-import '../data_classes/DatabaseHandler.dart';
 
 class LoginScreen extends StatefulWidget {
   final Model model;
   static const String id = 'login_screen';
-
   const LoginScreen({Key? key, required this.model}) : super(key: key);
 
   @override
@@ -24,8 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   Model model;
   bool showSpinner = false;
-  //final _auth = FirebaseAuth.instance;
-  String email = ''; // made these '' just to silence errors
+  String email = '';
   String password = '';
 
   _LoginScreenState(this.model);
