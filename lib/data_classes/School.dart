@@ -36,6 +36,7 @@ class School {
         sName = res["s_name"],
         location = res["location"],
         sType = res["s_type"];
+
   Map<String, Object?> toMap() {
     return {'school_id': schoolID, 's_name': sName, 'location': location,
     's_type': sType};

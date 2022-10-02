@@ -16,55 +16,72 @@ class CourseHistory extends StatefulWidget {
 }
 
 class _CourseHistoryState extends State<CourseHistory> {
-  Model model;
+  late Model model;
   List<String> courseList = [];
   String selectedCollege = "";
   String selectedCourse = "";
-  final List<DropdownMenuItem> colleges = [
-    const DropdownMenuItem(
-        value: "SJSU", child: Text("San Jose State University (SJSU)")),
-    const DropdownMenuItem(
-        value: "UCSD",
-        child: Text("University of California San Diego (UCSD)")),
-    const DropdownMenuItem(
-        value: "UCLA",
-        child: Text("University of California Los Angeles (UCLA)")),
-    const DropdownMenuItem(
-        value: "CSUSM",
-        child: Text("California State University San Marcos (CSUSM)")),
-  ];
-  final Map<String, List<DropdownMenuItem>> courses = {
-    "SJSU": [
-      const DropdownMenuItem(
-          value: "sjsuCourse1", child: Text("SJSU Course 1")),
-      const DropdownMenuItem(
-          value: "sjsuCourse2", child: Text("SJSU Course 2")),
-    ],
-    "UCSD": [
-      const DropdownMenuItem(
-          value: "ucsdCourse3", child: Text("UCSD Course 3")),
-      const DropdownMenuItem(
-          value: "ucsdCourse4", child: Text("UCSD Course 4")),
-    ],
-    "UCLA": [
-      const DropdownMenuItem(
-          value: "uclaCourse5", child: Text("UCLA Course 5")),
-      const DropdownMenuItem(
-          value: "uclaCourse6", child: Text("UCLA Course 6")),
-    ],
-    "CSUSM": [
-      const DropdownMenuItem(
-          value: "csusmCourse7", child: Text("CSUSM Course 7")),
-      const DropdownMenuItem(
-          value: "csusmCourse8", child: Text("CSUSM Course 8")),
-    ],
-    "": []
-  };
+  // final List<DropdownMenuItem> colleges = [
+  //   const DropdownMenuItem(
+  //       value: "SJSU", child: Text("San Jose State University (SJSU)")),
+  //   const DropdownMenuItem(
+  //       value: "UCSD",
+  //       child: Text("University of California San Diego (UCSD)")),
+  //   const DropdownMenuItem(
+  //       value: "UCLA",
+  //       child: Text("University of California Los Angeles (UCLA)")),
+  //   const DropdownMenuItem(
+  //       value: "CSUSM",
+  //       child: Text("California State University San Marcos (CSUSM)")),
+  // ];
+  List<DropdownMenuItem> colleges = [];
+  List<DropdownMenuItem> courses = [];
+  // final Map<String, List<DropdownMenuItem>> courses = {
+  //   "San Jose State University (SJSU)": [
+  //     const DropdownMenuItem(
+  //         value: "sjsuCourse1", child: Text("SJSU Course 1")),
+  //     const DropdownMenuItem(
+  //         value: "sjsuCourse2", child: Text("SJSU Course 2")),
+  //   ],
+  //   "Palomar College": [
+  //     const DropdownMenuItem(
+  //         value: "ucsdCourse3", child: Text("UCSD Course 3")),
+  //     const DropdownMenuItem(
+  //         value: "ucsdCourse4", child: Text("UCSD Course 4")),
+  //   ],
+  //   "Ohlone College": [
+  //     const DropdownMenuItem(
+  //         value: "uclaCourse5", child: Text("UCLA Course 5")),
+  //     const DropdownMenuItem(
+  //         value: "uclaCourse6", child: Text("UCLA Course 6")),
+  //   ],
+  //   "CSUSM": [
+  //     const DropdownMenuItem(
+  //         value: "csusmCourse7", child: Text("CSUSM Course 7")),
+  //     const DropdownMenuItem(
+  //         value: "csusmCourse8", child: Text("CSUSM Course 8")),
+  //   ],
+  //   "": []
+  // };
 
-  _CourseHistoryState(this.model);
+  _CourseHistoryState(Model model) {
+    print("constructor started");
+    this.model = model;
+    setColleges();
+    print("constructor ended");
+  }
+  Future<void> setColleges() async {
+    colleges = await model.getSchoolNames();
+    setState(() {});
+  }
+
+  Future<void> setCourses(String collegeName) async {
+    courses = await model.getCourseNames(collegeName);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    print("build started");
     return Scaffold(
       appBar: KAppBar(title: 'Course History', model: model),
       body: SingleChildScrollView(
@@ -160,6 +177,7 @@ class _CourseHistoryState extends State<CourseHistory> {
               onChanged: (value) {
                 setState(() {
                   selectedCollege = value; //?
+                  setCourses(selectedCollege);
                 });
               },
               isExpanded: true,
@@ -167,7 +185,7 @@ class _CourseHistoryState extends State<CourseHistory> {
             const SizedBox(height: 15.0),
             SearchChoices.single(
               value: selectedCourse,
-              items: courses[selectedCollege],
+              items: courses,
               hint: const Padding(
                 padding: EdgeInsets.all(12.0),
                 child: Text("Specify course number"),
@@ -179,7 +197,7 @@ class _CourseHistoryState extends State<CourseHistory> {
               },
               isExpanded: true,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             MaterialButton(
