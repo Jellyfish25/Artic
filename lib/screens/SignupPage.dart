@@ -122,16 +122,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     title: 'Confirm',
                     color: const Color(0xFF1375CF),
                     onPressed: () async {
-                      if (await model.emailIsAvailable(email) && password == confirmPassword) {
+                      if (await model.emailIsAvailable(email) &&
+                          password == confirmPassword) {
                         model.addUser(email, fullName, password);
                         model.setCurrentUser(email);
                         Navigator.pushNamed(context, Overview.id);
-                      }
-                      else if (password != confirmPassword) {
+                      } else if (password != confirmPassword) {
                         print("Error: password does not match.\n");
                         //TODO: make error visible from UI
-                      }
-                      else {
+                      } else {
                         print("Error: email is unavailable.\n");
                         //TODO: make error visible from UI
                       }
@@ -139,7 +138,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     height: 50.0,
                     width: 250.0),
                 const Text(
-                  'Don\'t have an account?',
+                  'Already have an account?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,

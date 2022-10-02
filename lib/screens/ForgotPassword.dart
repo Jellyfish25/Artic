@@ -2,7 +2,7 @@ import 'package:artic/components/rounded_button.dart';
 import 'package:artic/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/LoginScreen.dart';
+import '../screens/SignupPage.dart';
 import 'Overview.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -96,9 +96,9 @@ class _ForgotPassword extends State<ForgotPassword> {
                     textStyle:
                         const TextStyle(color: Colors.blue, fontSize: 20)),
                 onPressed: () {
-                  Navigator.pushNamed(context, LoginScreen.id);
+                  Navigator.pushNamed(context, SignupScreen.id);
                 },
-                child: const Text('Sign In'),
+                child: const Text('Sign Up'),
               ),
             ],
           ),
