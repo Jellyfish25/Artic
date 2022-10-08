@@ -7,15 +7,57 @@ class Model {
   late User _currentUser;
   late Database _db;
   late DatabaseHandler _handler;
+  late List<String> _courseHistory;
 
   Model() {
     _currentUser =
         User("default email", "default fullName", "default password");
     _handler = DatabaseHandler();
     setDB();
+    _courseHistory = [];
   }
   Future<void> setDB() async {
     _db = await _handler.initializeDB();
+  }
+
+  Future<void> setCourseHistory()  async {
+    List<Map<String, Object?>> dbCourseHistory = await _db.rawQuery("SELECT course_prefix, course_num FROM has_taken WHERE email = \'${_currentUser.getEmail()}\'");
+    List<Object?> prefixList = dbCourseHistory.map((e) => e["course_prefix"]).toList();
+    List<Object?> numList = dbCourseHistory.map((e) => e["course_num"]).toList();
+
+    _courseHistory = [];
+
+    for (int i = 0; i < numList.length; i++) {
+      String course = prefixList[i] as String;
+      course += "-";
+      course += numList[i] as String;
+      _courseHistory.add(course);
+    }
+  }
+
+  List<String> getCourseHistory() {
+    return _courseHistory;
+  }
+
+  Future<void> removeCourseFromHist(String course) async {
+    print("BEFORE REMOVE CH: ");
+    print(await _db.rawQuery("SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
+    if(_courseHistory.contains(course)) {
+      _courseHistory.remove(course);
+      await _db.rawQuery("DELETE FROM has_taken WHERE email = '${_currentUser.getEmail()}' AND (course_prefix || \"-\" || course_num) = '$course'");
+    }
+    print("AFTER REMOVE CH: ");
+    print(await _db.rawQuery("SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
+  }
+
+  Future<void> addCourseToHist(String selectedCourse) async {
+    print("BEFORE ADD CH: ");
+    print(await _db.rawQuery("SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
+    _courseHistory.add(selectedCourse);
+    List<String> course = selectedCourse.split("-");
+    await _db.rawQuery("INSERT INTO has_taken (email, course_prefix, course_num) VALUES ('${_currentUser.getEmail()}', '${course[0]}', '${course[1]}')");
+    print("AFTER ADD CH: ");
+    print(await _db.rawQuery("SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
   }
 
   //User methods
@@ -36,6 +78,7 @@ class Model {
     //print(courseTest[0]);
     _currentUser = emailList.map((e) => User.fromMap(e)).toList()[0];
     print(_currentUser.toString());
+    setCourseHistory();
   }
 
   void addUser(String email, String fullName, String password) {

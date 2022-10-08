@@ -17,7 +17,7 @@ class CourseHistory extends StatefulWidget {
 
 class _CourseHistoryState extends State<CourseHistory> {
   late Model model;
-  List<String> courseList = [];
+  late List<String> courseList;
   String selectedCollege = "";
   String selectedCourse = "";
   // final List<DropdownMenuItem> colleges = [
@@ -63,10 +63,10 @@ class _CourseHistoryState extends State<CourseHistory> {
   //   "": []
   // };
 
-  _CourseHistoryState(Model model) {
+  _CourseHistoryState(this.model) {
     print("constructor started");
-    this.model = model;
     setColleges();
+    //courseList = model.getCourseHistory();
     print("constructor ended");
   }
   Future<void> setColleges() async {
@@ -120,7 +120,7 @@ class _CourseHistoryState extends State<CourseHistory> {
                   const SizedBox(height: 5),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: courseList.length,
+                      itemCount: model.getCourseHistory().length,
                       itemBuilder: (BuildContext context, int index) {
                         return Transform.translate(
                           // adjust offset to change the list tile left to right spacing
@@ -130,7 +130,7 @@ class _CourseHistoryState extends State<CourseHistory> {
                               color: const Color(0xFF2194D2),
                               onPressed: () {
                                 setState(() {
-                                  courseList.remove(courseList[index]);
+                                  model.removeCourseFromHist(model.getCourseHistory()[index]);
                                 });
                               },
                               icon: const Icon(Icons.close),
@@ -138,7 +138,7 @@ class _CourseHistoryState extends State<CourseHistory> {
                             dense: true,
                             visualDensity: const VisualDensity(vertical: -3),
                             title: Text(
-                              '${index + 1}. ${courseList[index]}',
+                              '${index + 1}. ${model.getCourseHistory()[index]}',
                               style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.w700,
                                 fontStyle: FontStyle.normal,
@@ -209,9 +209,9 @@ class _CourseHistoryState extends State<CourseHistory> {
               onPressed: () {
                 if (selectedCollege != "" &&
                     selectedCourse != "" &&
-                    !courseList.contains(selectedCourse)) {
+                    !model.getCourseHistory().contains(selectedCourse)) {
                   setState(() {
-                    courseList.add(selectedCourse);
+                    model.addCourseToHist(selectedCourse);
                     selectedCourse = "";
                   });
                 }

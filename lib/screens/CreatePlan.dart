@@ -35,7 +35,9 @@ class _CreatePlanState extends State<CreatePlan> {
               const SizedBox(height: 10.0),
               TextField(
                 textAlign: TextAlign.left,
-                onChanged: (value) {},
+                onChanged: (value) {
+
+                },
                 decoration: kTextFieldDecoration.copyWith(
                     hintText: 'Degree Name',
                     floatingLabelBehavior: FloatingLabelBehavior.always),
@@ -47,7 +49,9 @@ class _CreatePlanState extends State<CreatePlan> {
               const SizedBox(height: 10.0),
               TextField(
                 textAlign: TextAlign.left,
-                onChanged: (value) {},
+                onChanged: (value) {
+
+                },
                 decoration: kTextFieldDecoration.copyWith(
                     hintText: 'College/University',
                     floatingLabelBehavior: FloatingLabelBehavior.always),
@@ -59,7 +63,9 @@ class _CreatePlanState extends State<CreatePlan> {
               const SizedBox(height: 10.0),
               TextField(
                 textAlign: TextAlign.left,
-                onChanged: (value) {},
+                onChanged: (value) {
+
+                },
                 decoration: kTextFieldDecoration.copyWith(
                     hintText: 'College/University',
                     floatingLabelBehavior: FloatingLabelBehavior.always),
