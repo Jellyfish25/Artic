@@ -7,62 +7,65 @@ class Model {
   late User _currentUser;
   late Database _db;
   late DatabaseHandler _handler;
-  late List<String> _courseHistory;
+  //late List<String> _courseHistory;
 
   Model() {
     _currentUser =
         User("default email", "default fullName", "default password");
     _handler = DatabaseHandler();
     setDB();
-    _courseHistory = [];
+    //_courseHistory = [];
   }
   Future<void> setDB() async {
     _db = await _handler.initializeDB();
   }
 
-  Future<void> setCourseHistory()  async {
-    List<Map<String, Object?>> dbCourseHistory = await _db.rawQuery("SELECT course_prefix, course_num FROM has_taken WHERE email = \'${_currentUser.getEmail()}\'");
-    List<Object?> prefixList = dbCourseHistory.map((e) => e["course_prefix"]).toList();
-    List<Object?> numList = dbCourseHistory.map((e) => e["course_num"]).toList();
+  Future<List<String>> getCourseHistory() async {
+    List<Map<String, Object?>> dbCourseHistory = await _db.rawQuery(
+        "SELECT course_prefix, course_num FROM has_taken WHERE email = \'${_currentUser.getEmail()}\'");
+    List<Object?> prefixList =
+        dbCourseHistory.map((e) => e["course_prefix"]).toList();
+    List<Object?> numList =
+        dbCourseHistory.map((e) => e["course_num"]).toList();
 
-    _courseHistory = [];
+    List<String> courseHistory = [];
 
     for (int i = 0; i < numList.length; i++) {
       String course = prefixList[i] as String;
       course += "-";
       course += numList[i] as String;
-      _courseHistory.add(course);
+      courseHistory.add(course);
     }
-  }
-
-  List<String> getCourseHistory() {
-    return _courseHistory;
+    return courseHistory;
   }
 
   Future<void> removeCourseFromHist(String course) async {
     print("BEFORE REMOVE CH: ");
-    print(await _db.rawQuery("SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
-    if(_courseHistory.contains(course)) {
-      _courseHistory.remove(course);
-      await _db.rawQuery("DELETE FROM has_taken WHERE email = '${_currentUser.getEmail()}' AND (course_prefix || \"-\" || course_num) = '$course'");
-    }
+    print(await _db.rawQuery(
+        "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
+    await _db.rawQuery(
+        "DELETE FROM has_taken WHERE email = '${_currentUser.getEmail()}' AND (course_prefix || \"-\" || course_num) = '$course'");
     print("AFTER REMOVE CH: ");
-    print(await _db.rawQuery("SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
+    print(await _db.rawQuery(
+        "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
   }
 
   Future<void> addCourseToHist(String selectedCourse) async {
     print("BEFORE ADD CH: ");
-    print(await _db.rawQuery("SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
-    _courseHistory.add(selectedCourse);
+    print(await _db.rawQuery(
+        "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
     List<String> course = selectedCourse.split("-");
-    await _db.rawQuery("INSERT INTO has_taken (email, course_prefix, course_num) VALUES ('${_currentUser.getEmail()}', '${course[0]}', '${course[1]}')");
+    await _db.rawQuery(
+        "INSERT INTO has_taken (email, course_prefix, course_num) VALUES ('${_currentUser.getEmail()}', '${course[0]}', '${course[1]}')");
     print("AFTER ADD CH: ");
-    print(await _db.rawQuery("SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
+    print(await _db.rawQuery(
+        "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
   }
 
   //User methods
   Future<bool> userIsValid(String email, String password) async {
-    List<Map> emailList = await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
+    List<Map> emailList =
+        await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
     if (emailList.isNotEmpty) {
       String dbPassword = emailList[0]["password"];
       print("userIsValid = true\n");
@@ -73,12 +76,12 @@ class Model {
   }
 
   Future<void> setCurrentUser(String email) async {
-    List<Map<String, Object?>> emailList = await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
+    List<Map<String, Object?>> emailList =
+        await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
     //List<Map<String, Object?>> courseTest = await _db.rawQuery("SELECT * FROM course WHERE course_title = 'Software Engineering I'");
     //print(courseTest[0]);
     _currentUser = emailList.map((e) => User.fromMap(e)).toList()[0];
     print(_currentUser.toString());
-    setCourseHistory();
   }
 
   void addUser(String email, String fullName, String password) {
@@ -86,7 +89,8 @@ class Model {
   }
 
   Future<bool> emailIsAvailable(String email) async {
-    List<Map> emailList = await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
+    List<Map> emailList =
+        await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
     return emailList.isEmpty;
   }
   //End of User methods
@@ -94,7 +98,8 @@ class Model {
   //School methods
   Future<List<DropdownMenuItem<String>>> getSchoolNames() async {
     print("starting getSchoolNames()\n");
-    List<Map<String, Object?>> schoolNameList = await _db.query('school', columns: ['s_name']);
+    List<Map<String, Object?>> schoolNameList =
+        await _db.query('school', columns: ['s_name']);
     //print("contents of schoolNameList: $schoolNameList\n");
     List<Object?> list = schoolNameList.map((e) => e["s_name"]).toList();
     List<DropdownMenuItem<String>> colleges = [];
@@ -106,11 +111,14 @@ class Model {
     return colleges;
   }
 
-  Future<List<DropdownMenuItem<String>>> getCourseNames(String collegeName) async {
+  Future<List<DropdownMenuItem<String>>> getCourseNames(
+      String collegeName) async {
     print("starting getCourseNames()\n");
-    List<Map<String, Object?>> courseNameList = await _db.rawQuery("SELECT course_prefix, course_num FROM school JOIN course ON school.school_id=course.school_id WHERE s_name = \'$collegeName\'");
+    List<Map<String, Object?>> courseNameList = await _db.rawQuery(
+        "SELECT course_prefix, course_num FROM school JOIN course ON school.school_id=course.school_id WHERE s_name = \'$collegeName\'");
     //print("contents of schoolNameList: $schoolNameList\n");
-    List<Object?> prefixList = courseNameList.map((e) => e["course_prefix"]).toList();
+    List<Object?> prefixList =
+        courseNameList.map((e) => e["course_prefix"]).toList();
     List<Object?> numList = courseNameList.map((e) => e["course_num"]).toList();
     List<DropdownMenuItem<String>> courses = [];
     for (int i = 0; i < numList.length; i++) {

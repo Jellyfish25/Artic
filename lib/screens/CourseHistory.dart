@@ -17,60 +17,28 @@ class CourseHistory extends StatefulWidget {
 
 class _CourseHistoryState extends State<CourseHistory> {
   late Model model;
-  late List<String> courseList;
+  late List<String> courseList = [];
   String selectedCollege = "";
   String selectedCourse = "";
-  // final List<DropdownMenuItem> colleges = [
-  //   const DropdownMenuItem(
-  //       value: "SJSU", child: Text("San Jose State University (SJSU)")),
-  //   const DropdownMenuItem(
-  //       value: "UCSD",
-  //       child: Text("University of California San Diego (UCSD)")),
-  //   const DropdownMenuItem(
-  //       value: "UCLA",
-  //       child: Text("University of California Los Angeles (UCLA)")),
-  //   const DropdownMenuItem(
-  //       value: "CSUSM",
-  //       child: Text("California State University San Marcos (CSUSM)")),
-  // ];
+
   List<DropdownMenuItem> colleges = [];
   List<DropdownMenuItem> courses = [];
-  // final Map<String, List<DropdownMenuItem>> courses = {
-  //   "San Jose State University (SJSU)": [
-  //     const DropdownMenuItem(
-  //         value: "sjsuCourse1", child: Text("SJSU Course 1")),
-  //     const DropdownMenuItem(
-  //         value: "sjsuCourse2", child: Text("SJSU Course 2")),
-  //   ],
-  //   "Palomar College": [
-  //     const DropdownMenuItem(
-  //         value: "ucsdCourse3", child: Text("UCSD Course 3")),
-  //     const DropdownMenuItem(
-  //         value: "ucsdCourse4", child: Text("UCSD Course 4")),
-  //   ],
-  //   "Ohlone College": [
-  //     const DropdownMenuItem(
-  //         value: "uclaCourse5", child: Text("UCLA Course 5")),
-  //     const DropdownMenuItem(
-  //         value: "uclaCourse6", child: Text("UCLA Course 6")),
-  //   ],
-  //   "CSUSM": [
-  //     const DropdownMenuItem(
-  //         value: "csusmCourse7", child: Text("CSUSM Course 7")),
-  //     const DropdownMenuItem(
-  //         value: "csusmCourse8", child: Text("CSUSM Course 8")),
-  //   ],
-  //   "": []
-  // };
 
   _CourseHistoryState(this.model) {
     print("constructor started");
     setColleges();
     //courseList = model.getCourseHistory();
+    setCourseList();
     print("constructor ended");
   }
+
   Future<void> setColleges() async {
     colleges = await model.getSchoolNames();
+    setState(() {});
+  }
+
+  Future<void> setCourseList() async {
+    courseList = await model.getCourseHistory();
     setState(() {});
   }
 
@@ -120,7 +88,7 @@ class _CourseHistoryState extends State<CourseHistory> {
                   const SizedBox(height: 5),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: model.getCourseHistory().length,
+                      itemCount: courseList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Transform.translate(
                           // adjust offset to change the list tile left to right spacing
@@ -130,7 +98,8 @@ class _CourseHistoryState extends State<CourseHistory> {
                               color: const Color(0xFF2194D2),
                               onPressed: () {
                                 setState(() {
-                                  model.removeCourseFromHist(model.getCourseHistory()[index]);
+                                  model.removeCourseFromHist(courseList[index]);
+                                  courseList.removeAt(index);
                                 });
                               },
                               icon: const Icon(Icons.close),
@@ -138,7 +107,7 @@ class _CourseHistoryState extends State<CourseHistory> {
                             dense: true,
                             visualDensity: const VisualDensity(vertical: -3),
                             title: Text(
-                              '${index + 1}. ${model.getCourseHistory()[index]}',
+                              '${index + 1}. ${courseList[index]}',
                               style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.w700,
                                 fontStyle: FontStyle.normal,
@@ -209,9 +178,10 @@ class _CourseHistoryState extends State<CourseHistory> {
               onPressed: () {
                 if (selectedCollege != "" &&
                     selectedCourse != "" &&
-                    !model.getCourseHistory().contains(selectedCourse)) {
+                    !courseList.contains(selectedCourse)) {
                   setState(() {
                     model.addCourseToHist(selectedCourse);
+                    courseList.add(selectedCourse);
                     selectedCourse = "";
                   });
                 }
