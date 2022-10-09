@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../constants.dart';
 import '../data_classes/Model.dart';
 import 'CreatePlan.dart';
+import 'ViewPlan.dart';
 
 class MyPlans extends StatefulWidget {
   final Model model;
@@ -85,7 +86,10 @@ class _MyPlansState extends State<MyPlans> {
 
                     //***************** One tap to favorite, one tap to edit
                     child: ListTile(
-                      onTap: () {},
+                      onTap: () {
+                        print(plans[index]);
+                        Navigator.pushNamed(context, ViewPlan.id);
+                      },
                       leading: IconButton(
                         color: Colors.black,
                         onPressed: () {
