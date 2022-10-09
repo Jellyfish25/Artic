@@ -97,7 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                     },
                     height: 50.0,
-                    width: 250.0),
+                    width: 250.0
+                ),
                 const Text(
                   'Don\'t have an account?',
                   textAlign: TextAlign.center,
