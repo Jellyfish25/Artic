@@ -3,20 +3,23 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:artic/components/rounded_button.dart';
+import '../data_classes/Plan.dart';
 
 class ViewPlan extends StatefulWidget {
   final Model model;
+  final Plan plan;
   static const String id = 'ViewPlan';
-  const ViewPlan({Key? key, required this.model}) : super(key: key);
+  const ViewPlan({Key? key, required this.model, required this.plan})
+      : super(key: key);
 
   @override
-  State<ViewPlan> createState() => _ViewPlanState(model);
+  State<ViewPlan> createState() => _ViewPlanState(model, plan);
 }
 
 class _ViewPlanState extends State<ViewPlan> {
   Model model;
-
-  _ViewPlanState(this.model);
+  Plan plan;
+  _ViewPlanState(this.model, this.plan);
 
   List<String> reqNeeded = [
     'Engr 10',
@@ -40,7 +43,8 @@ class _ViewPlanState extends State<ViewPlan> {
         children: [
           const SizedBox(height: 20),
           Text(
-            'B.S. Computer Engineering, SJSU',
+            plan.getDegName(),
+            //'B.S. Computer Engineering, SJSU',
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w700,
               fontStyle: FontStyle.normal,
@@ -105,8 +109,7 @@ class _ViewPlanState extends State<ViewPlan> {
                   ),
                 ],
               ),
-            )
-            ,
+            ),
           ),
           const SizedBox(height: 20),
           Center(
@@ -165,12 +168,10 @@ class _ViewPlanState extends State<ViewPlan> {
                   ),
                 ],
               ),
-            )
-            ,
+            ),
           ),
         ],
-      )
-      ,
+      ),
       drawer: getKNavBar(model),
     );
   }

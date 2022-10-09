@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants.dart';
 import '../data_classes/Model.dart';
+import '../data_classes/Plan.dart';
 import 'CreatePlan.dart';
 import 'ViewPlan.dart';
 
@@ -88,7 +89,17 @@ class _MyPlansState extends State<MyPlans> {
                     child: ListTile(
                       onTap: () {
                         print(plans[index]);
-                        Navigator.pushNamed(context, ViewPlan.id);
+                        Plan currentPlan = Plan(
+                            "planId",
+                            "",
+                            model.getCurrentUser(),
+                            "dummy college",
+                            plans[index]);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ViewPlan(model: model, plan: currentPlan)));
                       },
                       leading: IconButton(
                         color: Colors.black,

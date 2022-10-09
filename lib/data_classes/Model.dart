@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import '../data_classes/DatabaseHandler.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'Plan.dart';
+
 class Model {
   late User _currentUser;
   late Database _db;
   late DatabaseHandler _handler;
+  late List<Plan> _planList;
   //late List<String> _courseHistory;
 
   Model() {
@@ -75,6 +78,10 @@ class Model {
     return false;
   }
 
+  String getCurrentUser() {
+    return _currentUser.getFullName();
+  }
+
   Future<void> setCurrentUser(String email) async {
     List<Map<String, Object?>> emailList =
         await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
@@ -111,6 +118,22 @@ class Model {
     return colleges;
   }
 
+  Future<List<DropdownMenuItem<String>>> getSchoolDegrees(
+      String schoolName) async {
+    print("starting getSchoolDegrees()\n");
+    List<Map<String, Object?>> schoolDegreeList = await _db.rawQuery(
+        "SELECT deg_name FROM degree JOIN school ON degree.school_id=school.school_id WHERE s_name = '$schoolName'");
+    //print("contents of schoolNameList: $schoolNameList\n");
+    List<Object?> list = schoolDegreeList.map((e) => e["deg_name"]).toList();
+    List<DropdownMenuItem<String>> degrees = [];
+    for (Object? o in list) {
+      String name = o as String;
+      degrees.add(DropdownMenuItem(value: name, child: Text(name)));
+    }
+    print("End of getSchoolDegrees()\n");
+    return degrees;
+  }
+
   Future<List<DropdownMenuItem<String>>> getCourseNames(
       String collegeName) async {
     print("starting getCourseNames()\n");
@@ -131,4 +154,15 @@ class Model {
     return courses;
   }
   //End of School methods
+
+  //Plans methods
+  void setPlansList(List<Plan> planList) {
+    _planList = planList;
+  }
+
+  List<Plan> getPlanList() {
+    return _planList;
+  }
+
+  void addPlan(Plan plan) {}
 }

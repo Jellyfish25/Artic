@@ -1,8 +1,10 @@
 import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:search_choices/search_choices.dart';
 import '../constants.dart';
 import 'ViewPlan.dart';
+import 'package:artic/data_classes/Plan.dart';
 
 bool agreed = false;
 
@@ -17,8 +19,28 @@ class CreatePlan extends StatefulWidget {
 
 class _CreatePlanState extends State<CreatePlan> {
   Model model;
+  String degreeName = '';
+  String currentCollege = '';
+  String targetCollege = '';
 
-  _CreatePlanState(this.model);
+  List<DropdownMenuItem> degrees = [];
+  List<DropdownMenuItem> colleges = [];
+
+  _CreatePlanState(this.model) {
+    print("constructor started");
+    setColleges();
+    print("constructor ended");
+  }
+
+  Future<void> setColleges() async {
+    colleges = await model.getSchoolNames();
+    setState(() {});
+  }
+
+  Future<void> setDegrees(String collegeName) async {
+    degrees = await model.getSchoolDegrees(collegeName);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,59 +52,55 @@ class _CreatePlanState extends State<CreatePlan> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const Align(
-                  alignment: Alignment.centerLeft, child: Text("Degree:")),
-              const SizedBox(height: 10.0),
-              TextField(
-                textAlign: TextAlign.left,
+              SearchChoices.single(
+                value: currentCollege,
+                items: colleges,
+                //selectedItems: selectedColleges,
+                hint: const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text("Current College/University"),
+                ),
                 onChanged: (value) {
-
+                  setState(() {
+                    currentCollege = value; //?
+                  });
                 },
-                decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Degree Name',
-                    floatingLabelBehavior: FloatingLabelBehavior.always),
+                isExpanded: true,
               ),
               const SizedBox(height: 10.0),
-              const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Current College/University:")),
-              const SizedBox(height: 10.0),
-              TextField(
-                textAlign: TextAlign.left,
+              SearchChoices.single(
+                value: targetCollege,
+                items: colleges,
+                //selectedItems: selectedColleges,
+                hint: const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text("Target College/University"),
+                ),
                 onChanged: (value) {
-
+                  setState(() {
+                    targetCollege = value; //?
+                    setDegrees(targetCollege);
+                  });
                 },
-                decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'College/University',
-                    floatingLabelBehavior: FloatingLabelBehavior.always),
+                isExpanded: true,
               ),
               const SizedBox(height: 10.0),
-              const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Receive Degree At:")),
-              const SizedBox(height: 10.0),
-              TextField(
-                textAlign: TextAlign.left,
+              SearchChoices.single(
+                value: degreeName,
+                items: degrees,
+                //selectedItems: selectedColleges,
+                hint: const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text("Degree Name"),
+                ),
                 onChanged: (value) {
-
+                  setState(() {
+                    degreeName = value; //?
+                  });
                 },
-                decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'College/University',
-                    floatingLabelBehavior: FloatingLabelBehavior.always),
+                isExpanded: true,
               ),
-              const SizedBox(height: 10.0),
-              const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Desired Units Per Term:")),
-              const SizedBox(height: 10.0),
-              TextField(
-                textAlign: TextAlign.left,
-                onChanged: (value) {},
-                decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Desired Units',
-                    floatingLabelBehavior: FloatingLabelBehavior.always),
-              ),
-              const SizedBox(height: 145.0),
+              const SizedBox(height: 220.0),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: MaterialButton(
@@ -92,9 +110,20 @@ class _CreatePlanState extends State<CreatePlan> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(22.0)),
                   onPressed: () {
+                    print(degreeName);
+                    print(currentCollege);
+                    print(targetCollege);
+                    //print(desiredUnits);
+                    Plan currentPlan = Plan("planId", "",
+                        model.getCurrentUser(), targetCollege, degreeName);
                     !agreed
-                        ? showAlertDialog(context)
-                        : Navigator.pushNamed(context, ViewPlan.id);
+                        ? showAlertDialog(context,
+                            model: model, plan: currentPlan)
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ViewPlan(model: model, plan: currentPlan)));
                   },
                   child: Text(
                     'Generate Plan',
@@ -125,7 +154,8 @@ class _CreatePlanState extends State<CreatePlan> {
   }
 }
 
-showAlertDialog(BuildContext context) {
+showAlertDialog(BuildContext context,
+    {required Plan plan, required Model model}) {
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     shape: const RoundedRectangleBorder(
@@ -164,15 +194,20 @@ showAlertDialog(BuildContext context) {
           TextButton(
             onPressed: () {
               agreed = true;
-              Navigator.pushNamed(context, ViewPlan.id);
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ViewPlan(model: model, plan: plan)));
             },
-            child: const Text("Agree"),
+            child: const Text("Agrue"),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text("Disagree"),
+            child: const Text("Disagrue"),
           ),
         ],
       )
