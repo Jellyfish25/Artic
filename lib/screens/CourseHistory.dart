@@ -52,10 +52,13 @@ class _CourseHistoryState extends State<CourseHistory> {
 
     selectedCollegeID = courseObjects[0]['school_id'].toString();
 
+    courseDropdownMenuItems = [];
+
     for (int i = 0; i < numList.length; i++) {
       String course = prefixList[i] as String;
       course += "-";
       course += numList[i] as String;
+      print(course);
       courseDropdownMenuItems.add(DropdownMenuItem(value: course, child: Text(course)));
     }
     setState(() {});
