@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:artic/data_classes/User.dart';
 import 'package:flutter/material.dart';
 import '../data_classes/DatabaseHandler.dart';
@@ -181,15 +183,30 @@ class Model {
     final List<Map<String, Object?>> reqObjects = await _db.rawQuery("SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
     List<Object?> prefixList = reqObjects.map((e) => e["course_prefix"]).toList();
     List<Object?> numList = reqObjects.map((e) => e["course_num"]).toList();
+    List<Object?> categoryList = reqObjects.map((e) => e["category"]).toList();
+    List<Object?> catReqList = reqObjects.map((e) => e["cat_req"]).toList();
+    HashMap<String, int> map = HashMap();
     List<String> reqNeeded = [];
     for (int i = 0; i < numList.length; i++) {
-      String course = prefixList[i] as String;
-      course += "-";
-      course += numList[i] as String;
-      reqNeeded.add(course);
+      if ((categoryList[i] as String).isEmpty) {
+        String course = prefixList[i] as String;
+        course += "-";
+        course += numList[i] as String;
+        reqNeeded.add(course);
+      }
+      else {
+        String category = categoryList[i] as String;
+        if (!map.containsKey(category)) {
+          map[category] = (catReqList[i] as int) - 1;
+          reqNeeded.add(category);
+        }
+        else if (map[category]! > 0) {
+          map[category] = (map[category]!) - 1;
+          reqNeeded.add(category);
+        }
+      }
     }
     List<String> courseHist = await getCourseHistory();
-    //TODO change getCourseHistory to return a List<Course>
     for (String course in courseHist) {
       if (reqNeeded.contains(course)) {
         reqNeeded.remove(course);
