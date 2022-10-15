@@ -22,7 +22,8 @@ class _CourseHistoryState extends State<CourseHistory> {
   String selectedCourse = "";
 
   List<DropdownMenuItem> colleges = [];
-  List<DropdownMenuItem> courses = [];
+  List<DropdownMenuItem> courseDropdownMenuItems = [];
+  String selectedCollegeID = "";
 
   _CourseHistoryState(this.model) {
     print("constructor started");
@@ -43,7 +44,22 @@ class _CourseHistoryState extends State<CourseHistory> {
   }
 
   Future<void> setCourses(String collegeName) async {
-    courses = await model.getCourseNames(collegeName);
+    List<Map<String, Object?>> courseObjects = await model.getCourses(collegeName);
+    List<Object?> prefixList =
+    courseObjects.map((e) => e["course_prefix"]).toList();
+    List<Object?> numList = courseObjects.map((e) => e["course_num"]).toList();
+
+    selectedCollegeID = courseObjects[0]['school_id'].toString();
+
+    courseDropdownMenuItems = [];
+
+    for (int i = 0; i < numList.length; i++) {
+      String course = prefixList[i] as String;
+      course += "-";
+      course += numList[i] as String;
+      print(course);
+      courseDropdownMenuItems.add(DropdownMenuItem(value: course, child: Text(course)));
+    }
     setState(() {});
   }
 
@@ -154,7 +170,7 @@ class _CourseHistoryState extends State<CourseHistory> {
             const SizedBox(height: 15.0),
             SearchChoices.single(
               value: selectedCourse,
-              items: courses,
+              items: courseDropdownMenuItems,
               hint: const Padding(
                 padding: EdgeInsets.all(12.0),
                 child: Text("Specify course number"),
@@ -180,7 +196,7 @@ class _CourseHistoryState extends State<CourseHistory> {
                     selectedCourse != "" &&
                     !courseList.contains(selectedCourse)) {
                   setState(() {
-                    model.addCourseToHist(selectedCourse);
+                    model.addCourseToHist(selectedCollegeID, selectedCourse);
                     courseList.add(selectedCourse);
                     selectedCourse = "";
                   });

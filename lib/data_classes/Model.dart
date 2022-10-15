@@ -53,13 +53,13 @@ class Model {
         "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
   }
 
-  Future<void> addCourseToHist(String selectedCourse) async {
+  Future<void> addCourseToHist(String courseSchoolID, String selectedCourse) async {
     print("BEFORE ADD CH: ");
     print(await _db.rawQuery(
         "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
     List<String> course = selectedCourse.split("-");
     await _db.rawQuery(
-        "INSERT INTO has_taken (email, course_prefix, course_num) VALUES ('${_currentUser.getEmail()}', '${course[0]}', '${course[1]}')");
+        "INSERT INTO has_taken (email, school_id, course_prefix, course_num) VALUES ('${_currentUser.getEmail()}', '$courseSchoolID', '${course[0]}', '${course[1]}')");
     print("AFTER ADD CH: ");
     print(await _db.rawQuery(
         "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
@@ -134,24 +134,13 @@ class Model {
     return degrees;
   }
 
-  Future<List<DropdownMenuItem<String>>> getCourseNames(
+  Future<List<Map<String, Object?>>> getCourses(
       String collegeName) async {
-    print("starting getCourseNames()\n");
-    List<Map<String, Object?>> courseNameList = await _db.rawQuery(
-        "SELECT course_prefix, course_num FROM school JOIN course ON school.school_id=course.school_id WHERE s_name = \'$collegeName\'");
-    //print("contents of schoolNameList: $schoolNameList\n");
-    List<Object?> prefixList =
-        courseNameList.map((e) => e["course_prefix"]).toList();
-    List<Object?> numList = courseNameList.map((e) => e["course_num"]).toList();
-    List<DropdownMenuItem<String>> courses = [];
-    for (int i = 0; i < numList.length; i++) {
-      String course = prefixList[i] as String;
-      course += "-";
-      course += numList[i] as String;
-      courses.add(DropdownMenuItem(value: course, child: Text(course)));
-    }
-    print("End of getCourseNames()\n");
-    return courses;
+    print("starting getCourses()\n");
+    List<Map<String, Object?>> courseList = await _db.rawQuery(
+        "SELECT course.school_id, course_prefix, course_num FROM school JOIN course ON school.school_id=course.school_id WHERE s_name = \'$collegeName\'");
+    print("End of getCourses()\n");
+    return courseList;
   }
   //End of School methods
 
