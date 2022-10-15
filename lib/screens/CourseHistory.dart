@@ -23,7 +23,6 @@ class _CourseHistoryState extends State<CourseHistory> {
 
   List<DropdownMenuItem> colleges = [];
   List<DropdownMenuItem> courseDropdownMenuItems = [];
-  List<Map<String, Object?>> courseObjects = [];
   String selectedCollegeID = "";
 
   _CourseHistoryState(this.model) {
@@ -45,7 +44,7 @@ class _CourseHistoryState extends State<CourseHistory> {
   }
 
   Future<void> setCourses(String collegeName) async {
-    courseObjects = await model.getCourses(collegeName);
+    List<Map<String, Object?>> courseObjects = await model.getCourses(collegeName);
     List<Object?> prefixList =
     courseObjects.map((e) => e["course_prefix"]).toList();
     List<Object?> numList = courseObjects.map((e) => e["course_num"]).toList();
