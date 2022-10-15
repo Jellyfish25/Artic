@@ -18,12 +18,12 @@ class CourseHistory extends StatefulWidget {
 class _CourseHistoryState extends State<CourseHistory> {
   late Model model;
   late List<String> courseList = [];
-  String selectedCollege = "";
+  String selectedCollegeid = ""; //TODO: udpate
   String selectedCourse = "";
 
   List<DropdownMenuItem> colleges = [];
   List<DropdownMenuItem> courseDropdownMenuItems = [];
-  String selectedCollegeID = "";
+  //String selectedCollegeID = "";
 
   _CourseHistoryState(this.model) {
     print("constructor started");
@@ -43,23 +43,20 @@ class _CourseHistoryState extends State<CourseHistory> {
     setState(() {});
   }
 
-  Future<void> setCourses(String collegeName) async {
-    List<Map<String, Object?>> courseObjects = await model.getCourses(collegeName);
-    List<Object?> prefixList =
-    courseObjects.map((e) => e["course_prefix"]).toList();
-    List<Object?> numList = courseObjects.map((e) => e["course_num"]).toList();
-
-    selectedCollegeID = courseObjects[0]['school_id'].toString();
-
-    courseDropdownMenuItems = [];
-
-    for (int i = 0; i < numList.length; i++) {
-      String course = prefixList[i] as String;
-      course += "-";
-      course += numList[i] as String;
-      print(course);
-      courseDropdownMenuItems.add(DropdownMenuItem(value: course, child: Text(course)));
-    }
+  Future<void> setCourses(String collegeid) async {
+    courseDropdownMenuItems = await model.getCourses(collegeid);
+    // List<Object?> prefixList =
+    // courseObjects.map((e) => e["course_prefix"]).toList();
+    // List<Object?> numList = courseObjects.map((e) => e["course_num"]).toList();
+    // selectedCollegeID = courseObjects[0]['school_id'].toString();
+    // courseDropdownMenuItems = [];
+    // for (int i = 0; i < numList.length; i++) {
+    //   String course = prefixList[i] as String;
+    //   course += "-";
+    //   course += numList[i] as String;
+    //   print(course);
+    //   courseDropdownMenuItems.add(DropdownMenuItem(value: course, child: Text(course)));
+    // }
     setState(() {});
   }
 
@@ -152,17 +149,16 @@ class _CourseHistoryState extends State<CourseHistory> {
             ),
             const SizedBox(height: 5.0),
             SearchChoices.single(
-              value: selectedCollege,
+              value: selectedCollegeid,
               items: colleges,
-              //selectedItems: selectedColleges,
               hint: const Padding(
                 padding: EdgeInsets.all(12.0),
                 child: Text("Specify college"),
               ),
               onChanged: (value) {
                 setState(() {
-                  selectedCollege = value; //?
-                  setCourses(selectedCollege);
+                  selectedCollegeid = value; //?
+                  setCourses(selectedCollegeid);
                 });
               },
               isExpanded: true,
@@ -192,11 +188,11 @@ class _CourseHistoryState extends State<CourseHistory> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(22.0)),
               onPressed: () {
-                if (selectedCollege != "" &&
+                if (selectedCollegeid != "" &&
                     selectedCourse != "" &&
                     !courseList.contains(selectedCourse)) {
                   setState(() {
-                    model.addCourseToHist(selectedCollegeID, selectedCourse);
+                    model.addCourseToHist(selectedCollegeid, selectedCourse);
                     courseList.add(selectedCourse);
                     selectedCourse = "";
                   });

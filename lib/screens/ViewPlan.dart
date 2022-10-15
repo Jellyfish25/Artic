@@ -19,21 +19,22 @@ class ViewPlan extends StatefulWidget {
 class _ViewPlanState extends State<ViewPlan> {
   Model model;
   Plan plan;
-  _ViewPlanState(this.model, this.plan);
+  late List<String> reqNeeded = [];
+  late List<String> reqMet = [];
 
-  List<String> reqNeeded = [
-    'Engr 10',
-    'Intro to Java',
-    'Math 101A',
-    'Physics',
-  ];
+  _ViewPlanState(this.model, this.plan) {
+    setReqNeeded();
+    setReqMet();
+  }
 
-  List<String> reqMet = [
-    'Engr 10',
-    'Intro to Java',
-    'Math 101A',
-    'Physics',
-  ];
+  Future<void> setReqNeeded() async {
+    reqNeeded = await model.getReqNeeded(plan);
+    setState(() {});
+  }
+  Future<void> setReqMet() async {
+    reqMet = await model.getReqMet(plan);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {

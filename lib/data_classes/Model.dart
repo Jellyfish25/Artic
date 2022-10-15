@@ -9,15 +9,13 @@ class Model {
   late User _currentUser;
   late Database _db;
   late DatabaseHandler _handler;
-  late List<Plan> _planList;
-  //late List<String> _courseHistory;
+  //late List<Plan> _planList;
 
   Model() {
     _currentUser =
         User("default email", "default fullName", "default password");
     _handler = DatabaseHandler();
     setDB();
-    //_courseHistory = [];
   }
   Future<void> setDB() async {
     _db = await _handler.initializeDB();
@@ -79,7 +77,7 @@ class Model {
   }
 
   String getCurrentUser() {
-    return _currentUser.getFullName();
+    return _currentUser.getEmail();
   }
 
   Future<void> setCurrentUser(String email) async {
@@ -105,24 +103,29 @@ class Model {
   //School methods
   Future<List<DropdownMenuItem<String>>> getSchoolNames() async {
     print("starting getSchoolNames()\n");
-    List<Map<String, Object?>> schoolNameList =
-        await _db.query('school', columns: ['s_name']);
+    List<Map<String, Object?>> schoolList = await _db.rawQuery("SELECT school_id, s_name FROM school");
     //print("contents of schoolNameList: $schoolNameList\n");
-    List<Object?> list = schoolNameList.map((e) => e["s_name"]).toList();
+    List<Object?> schoolIDs = schoolList.map((e) => e["school_id"]).toList();
+    List<Object?> schoolNames = schoolList.map((e) => e["s_name"]).toList();
     List<DropdownMenuItem<String>> colleges = [];
-    for (Object? o in list) {
-      String name = o as String;
-      colleges.add(DropdownMenuItem(value: name, child: Text(name)));
+    // for (Object? o in list) {
+    //   String name = o as String;
+    //   colleges.add(DropdownMenuItem(value: name, child: Text(name))); //TODO: set value to schoolID
+    // }
+    for (int i = 0; i < schoolIDs.length; i++) {
+      String schoolID = schoolIDs[i] as String;
+      String schoolName = schoolNames[i] as String;
+      colleges.add(DropdownMenuItem(value: schoolID, child: Text(schoolName)));
     }
     print("End of getSchoolNames()\n");
     return colleges;
   }
 
   Future<List<DropdownMenuItem<String>>> getSchoolDegrees(
-      String schoolName) async {
+      String schoolID) async {
     print("starting getSchoolDegrees()\n");
     List<Map<String, Object?>> schoolDegreeList = await _db.rawQuery(
-        "SELECT deg_name FROM degree JOIN school ON degree.school_id=school.school_id WHERE s_name = '$schoolName'");
+        "SELECT deg_name FROM degree JOIN school ON degree.school_id=school.school_id WHERE degree.school_id = '$schoolID'");
     //print("contents of schoolNameList: $schoolNameList\n");
     List<Object?> list = schoolDegreeList.map((e) => e["deg_name"]).toList();
     List<DropdownMenuItem<String>> degrees = [];
@@ -134,24 +137,91 @@ class Model {
     return degrees;
   }
 
-  Future<List<Map<String, Object?>>> getCourses(
-      String collegeName) async {
+  Future<List<DropdownMenuItem<String>>> getCourses(
+      String collegeID) async {
     print("starting getCourses()\n");
-    List<Map<String, Object?>> courseList = await _db.rawQuery(
-        "SELECT course.school_id, course_prefix, course_num FROM school JOIN course ON school.school_id=course.school_id WHERE s_name = \'$collegeName\'");
+    List<Map<String, Object?>> courseObjects = await _db.rawQuery(
+        "SELECT course.school_id, course_prefix, course_num FROM school JOIN course ON school.school_id=course.school_id WHERE course.school_id = \'$collegeID\'");
+    List<Object?> prefixList = courseObjects.map((e) => e["course_prefix"]).toList();
+    List<Object?> numList = courseObjects.map((e) => e["course_num"]).toList();
+    //selectedCollegeID = courseObjects[0]['school_id'].toString();
+    List<DropdownMenuItem<String>> courseDropdownMenuItems = [];
+    for (int i = 0; i < numList.length; i++) {
+      String course = prefixList[i] as String;
+      course += "-";
+      course += numList[i] as String;
+      print(course);
+      courseDropdownMenuItems.add(DropdownMenuItem(value: course, child: Text(course)));
+    }
     print("End of getCourses()\n");
-    return courseList;
+    return courseDropdownMenuItems;
   }
   //End of School methods
 
   //Plans methods
-  void setPlansList(List<Plan> planList) {
-    _planList = planList;
+
+  Future<List<Plan>> getPlans() async {
+    print("START OF getPlans");
+    final List<Map<String, Object?>> planObjects = await _db.rawQuery("SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'");
+    print(await _db.rawQuery("SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
+    print("END OF getPlans");
+    return planObjects.map((e) => Plan.fromMap(e)).toList();
   }
 
-  List<Plan> getPlanList() {
-    return _planList;
+  Future<void> addPlan(Plan plan) async {
+    print("BEFORE addPlan\n");
+    print(await _db.rawQuery("SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
+    await _db.rawQuery("INSERT INTO plan(date_created, owner, school_id, deg_name) VALUES ('${plan.getDateCreated()}', '${plan.getOwner()}', '${plan.getSchoolID()}', '${plan.getDegName()}')");
+    print("AFTER addPlan\n");
+    print(await _db.rawQuery("SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
   }
 
-  void addPlan(Plan plan) {}
+  Future<List<String>> getReqNeeded(Plan plan) async {
+    print("START OF getReqNeeded");
+    final List<Map<String, Object?>> reqObjects = await _db.rawQuery("SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
+    List<Object?> prefixList = reqObjects.map((e) => e["course_prefix"]).toList();
+    List<Object?> numList = reqObjects.map((e) => e["course_num"]).toList();
+    List<String> reqNeeded = [];
+    for (int i = 0; i < numList.length; i++) {
+      String course = prefixList[i] as String;
+      course += "-";
+      course += numList[i] as String;
+      reqNeeded.add(course);
+    }
+    List<String> courseHist = await getCourseHistory();
+    //TODO change getCourseHistory to return a List<Course>
+    for (String course in courseHist) {
+      if (reqNeeded.contains(course)) {
+        reqNeeded.remove(course);
+      }
+    }
+    print("END OF getReqNeeded");
+    return reqNeeded;
+  }
+
+  Future<List<String>> getReqMet(Plan plan) async {
+    print("START OF getReqMet");
+    final List<Map<String, Object?>> reqObjects = await _db.rawQuery("SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
+    List<Object?> prefixList = reqObjects.map((e) => e["course_prefix"]).toList();
+    List<Object?> numList = reqObjects.map((e) => e["course_num"]).toList();
+    List<String> allReqs = [];
+    for (int i = 0; i < numList.length; i++) {
+      String course = prefixList[i] as String;
+      course += "-";
+      course += numList[i] as String;
+      allReqs.add(course);
+    }
+    List<String> courseHist = await getCourseHistory();
+    List<String> reqMet = [];
+    print("reqMet before removing non-relevant courses: $reqMet");
+    for (String course in courseHist) {
+      if (allReqs.contains(course)) {
+        reqMet.add(course);
+      }
+    }
+    print("reqMet after adding courses: $reqMet\nEND OF getReqMet");
+    return reqMet;
+  }
+
+
 }

@@ -37,8 +37,8 @@ class _CreatePlanState extends State<CreatePlan> {
     setState(() {});
   }
 
-  Future<void> setDegrees(String collegeName) async {
-    degrees = await model.getSchoolDegrees(collegeName);
+  Future<void> setDegrees(String collegeID) async {
+    degrees = await model.getSchoolDegrees(collegeID);
     setState(() {});
   }
 
@@ -113,9 +113,10 @@ class _CreatePlanState extends State<CreatePlan> {
                     print(degreeName);
                     print(currentCollege);
                     print(targetCollege);
-                    //print(desiredUnits);
-                    Plan currentPlan = Plan("planId", "",
+                    DateTime today = DateTime.now();
+                    Plan currentPlan = Plan(0, "${today.year}-${today.month}-${today.day}", //TODO: address planID issue
                         model.getCurrentUser(), targetCollege, degreeName);
+                    model.addPlan(currentPlan);
                     !agreed
                         ? showAlertDialog(context,
                             model: model, plan: currentPlan)

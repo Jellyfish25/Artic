@@ -17,24 +17,18 @@ class MyPlans extends StatefulWidget {
 
 class _MyPlansState extends State<MyPlans> {
   Model model;
-  List<String> plans = [
-    'B.S in CMPE - SJSU',
-    'B.S in PHIL - SJSU',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-  ];
+  late List<Plan> plans = [];
   int planIndex = -1;
   int favoriteIndex = -1;
   String favoritePlan = '';
 
-  _MyPlansState(this.model);
+  _MyPlansState(this.model) {
+    setPlans();
+  }
+  Future<void> setPlans() async {
+    plans = await model.getPlans();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,24 +83,18 @@ class _MyPlansState extends State<MyPlans> {
                     child: ListTile(
                       onTap: () {
                         print(plans[index]);
-                        Plan currentPlan = Plan(
-                            "planId",
-                            "",
-                            model.getCurrentUser(),
-                            "dummy college",
-                            plans[index]);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    ViewPlan(model: model, plan: currentPlan)));
+                                    ViewPlan(model: model, plan: plans[index])));
                       },
                       leading: IconButton(
                         color: Colors.black,
                         onPressed: () {
                           setState(() {
                             favoriteIndex = index;
-                            favoritePlan = plans[index];
+                            favoritePlan = plans[index].getDegName();
                             print('favorite plan: $favoritePlan');
                           });
                         },
@@ -122,7 +110,7 @@ class _MyPlansState extends State<MyPlans> {
                         // adjust offset to change the icon to text spacing
                         offset: const Offset(0, 0),
                         child: Text(
-                          plans[index],
+                          plans[index].getDegName(),
                           style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w700,
                             fontStyle: FontStyle.normal,

@@ -1,5 +1,5 @@
 class Plan{
-  String planID;
+  int planID;
   String dateCreated;
   String owner;
   String schoolID;
@@ -7,7 +7,7 @@ class Plan{
 
   Plan(this.planID, this.dateCreated, this.owner, this.schoolID, this.degName);
 
-  String getPlanID() => planID;
+  int getPlanID() => planID;
 
   String getDateCreated() => dateCreated;
 
@@ -21,7 +21,7 @@ class Plan{
     dateCreated = value;
   }
 
-  void setPlanID(String value) {
+  void setPlanID(int value) {
     planID = value;
   }
 
