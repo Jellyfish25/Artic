@@ -42,6 +42,65 @@ class Model {
     return courseHistory;
   }
 
+  Future<List<String>> getEquivalentCourseHistory(String destSchoolID) async {
+
+    List<Map<String, Object?>> dbCourseHistory = await _db.rawQuery(
+        "SELECT school_id, course_prefix, course_num FROM has_taken WHERE email = \'${_currentUser.getEmail()}\'");
+    List<Object?> prefixList =
+    dbCourseHistory.map((e) => e["course_prefix"]).toList();
+    List<Object?> numList =
+    dbCourseHistory.map((e) => e["course_num"]).toList();
+    List<Object?> schoolIDList =
+    dbCourseHistory.map((e) => e["school_id"]).toList();
+
+    List<String> courseHistory = [];
+
+    for (int i = 0; i < numList.length; i++) {
+      String course = prefixList[i] as String;
+      course += "-";
+      course += numList[i] as String;
+      courseHistory.add(course);
+    }
+
+    List<Map<String, Object?>> ligma;
+
+    for (int i = 0; i < numList.length; i++) {
+      if(schoolIDList[i] as String != destSchoolID) {
+        List<Map<String, Object?>> eqCourseObj = await _db.rawQuery(
+            "SELECT (dest_course_prefix || \"-\" || dest_course_num) AS dest_course, and_req FROM is_equivalent_to WHERE src_school_id = \'${schoolIDList[i]}\' "
+            "AND dest_school_id = \'$destSchoolID\' "
+            "AND (src_course_prefix || \"-\" || src_course_num) = '${courseHistory[i]}'"
+        );
+
+        print(await _db.rawQuery(
+            "SELECT (dest_course_prefix || \"-\" || dest_course_num) AS dest_course, and_req FROM is_equivalent_to WHERE src_school_id = \'${schoolIDList[i]}\' "
+                "AND dest_school_id = \'$destSchoolID\' "
+                "AND (src_course_prefix || \"-\" || src_course_num) = '${courseHistory[i]}'"
+        ));
+
+        List<Object?> eqCourse =  eqCourseObj.map((e) => e["dest_course"]).toList();
+        List<Object?> andReq =  eqCourseObj.map((e) => e["and_req"]).toList();
+
+        /*
+        print("SRC COURSE: ${courseHistory[i]}");
+        print("ANDREQ: ${andReq}");
+        print(andReq.length);
+        */
+
+        if(eqCourse.isNotEmpty && (andReq.isEmpty || "${andReq[0]}" == "")) {
+          courseHistory[i] = eqCourse[0] as String;
+        }
+        else if (eqCourse.isNotEmpty) {
+        }
+        else {
+          courseHistory[i] = "";
+        }
+      }
+    }
+
+    return courseHistory;
+  }
+
   Future<void> removeCourseFromHist(String course) async {
     print("BEFORE REMOVE CH: ");
     print(await _db.rawQuery(
@@ -181,18 +240,27 @@ class Model {
   Future<List<String>> getReqNeeded(Plan plan) async {
     print("START OF getReqNeeded");
     final List<Map<String, Object?>> reqObjects = await _db.rawQuery("SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
+
     List<Object?> prefixList = reqObjects.map((e) => e["course_prefix"]).toList();
     List<Object?> numList = reqObjects.map((e) => e["course_num"]).toList();
     List<Object?> categoryList = reqObjects.map((e) => e["category"]).toList();
     List<Object?> catReqList = reqObjects.map((e) => e["cat_req"]).toList();
+    List<String> courseList = [];
+
+    for (int i = 0; i < numList.length; i++) {
+      String course = prefixList[i] as String;
+      course += "-";
+      course += numList[i] as String;
+      courseList.add(course);
+    }
+
     HashMap<String, int> map = HashMap();
+
     List<String> reqNeeded = [];
+
     for (int i = 0; i < numList.length; i++) {
       if ((categoryList[i] as String).isEmpty) {
-        String course = prefixList[i] as String;
-        course += "-";
-        course += numList[i] as String;
-        reqNeeded.add(course);
+        reqNeeded.add(courseList[i]);
       }
       else {
         String category = categoryList[i] as String;
@@ -206,10 +274,13 @@ class Model {
         }
       }
     }
-    List<String> courseHist = await getCourseHistory();
+    List<String> courseHist = await getEquivalentCourseHistory(plan.getSchoolID());
     for (String course in courseHist) {
       if (reqNeeded.contains(course)) {
         reqNeeded.remove(course);
+      }
+      else if (courseList.contains(course) && reqNeeded.contains(categoryList[courseList.indexOf(course)] as String)) {
+        reqNeeded.remove(categoryList[courseList.indexOf(course)] as String);
       }
     }
     print("END OF getReqNeeded");
@@ -223,17 +294,21 @@ class Model {
     List<Object?> numList = reqObjects.map((e) => e["course_num"]).toList();
     List<String> allReqs = [];
     for (int i = 0; i < numList.length; i++) {
-      String course = prefixList[i] as String;
-      course += "-";
-      course += numList[i] as String;
+      String course = "${prefixList[i] as String}-${numList[i] as String}";
       allReqs.add(course);
     }
     List<String> courseHist = await getCourseHistory();
+    List<String> courseEquivHist = await getEquivalentCourseHistory(plan.getSchoolID());
     List<String> reqMet = [];
     print("reqMet before removing non-relevant courses: $reqMet");
-    for (String course in courseHist) {
-      if (allReqs.contains(course)) {
-        reqMet.add(course);
+    for (int i = 0; i < courseHist.length; i++) {
+      if (allReqs.contains(courseEquivHist[i])) {
+        if(courseEquivHist[i] != courseHist[i]) {
+          reqMet.add("${courseEquivHist[i]} (from ${courseHist[i]})");
+        }
+        else {
+          reqMet.add("${courseEquivHist[i]}");
+        }
       }
     }
     print("reqMet after adding courses: $reqMet\nEND OF getReqMet");
