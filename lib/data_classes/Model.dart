@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:artic/data_classes/User.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../data_classes/DatabaseHandler.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -43,15 +44,14 @@ class Model {
   }
 
   Future<List<String>> getEquivalentCourseHistory(String destSchoolID) async {
-
     List<Map<String, Object?>> dbCourseHistory = await _db.rawQuery(
         "SELECT school_id, course_prefix, course_num FROM has_taken WHERE email = \'${_currentUser.getEmail()}\'");
     List<Object?> prefixList =
-    dbCourseHistory.map((e) => e["course_prefix"]).toList();
+        dbCourseHistory.map((e) => e["course_prefix"]).toList();
     List<Object?> numList =
-    dbCourseHistory.map((e) => e["course_num"]).toList();
+        dbCourseHistory.map((e) => e["course_num"]).toList();
     List<Object?> schoolIDList =
-    dbCourseHistory.map((e) => e["school_id"]).toList();
+        dbCourseHistory.map((e) => e["school_id"]).toList();
 
     List<String> courseHistory = [];
 
@@ -62,24 +62,24 @@ class Model {
       courseHistory.add(course);
     }
 
-    List<Map<String, Object?>> ligma;
+    // List<Map<String, Object?>> ligma;
+    Map<String, List<String>> eqCourseMap = {};
 
     for (int i = 0; i < numList.length; i++) {
-      if(schoolIDList[i] as String != destSchoolID) {
+      if (schoolIDList[i] as String != destSchoolID) {
         List<Map<String, Object?>> eqCourseObj = await _db.rawQuery(
             "SELECT (dest_course_prefix || \"-\" || dest_course_num) AS dest_course, and_req FROM is_equivalent_to WHERE src_school_id = \'${schoolIDList[i]}\' "
             "AND dest_school_id = \'$destSchoolID\' "
-            "AND (src_course_prefix || \"-\" || src_course_num) = '${courseHistory[i]}'"
-        );
+            "AND (src_course_prefix || \"-\" || src_course_num) = '${courseHistory[i]}'");
 
         print(await _db.rawQuery(
             "SELECT (dest_course_prefix || \"-\" || dest_course_num) AS dest_course, and_req FROM is_equivalent_to WHERE src_school_id = \'${schoolIDList[i]}\' "
-                "AND dest_school_id = \'$destSchoolID\' "
-                "AND (src_course_prefix || \"-\" || src_course_num) = '${courseHistory[i]}'"
-        ));
+            "AND dest_school_id = \'$destSchoolID\' "
+            "AND (src_course_prefix || \"-\" || src_course_num) = '${courseHistory[i]}'"));
 
-        List<Object?> eqCourse =  eqCourseObj.map((e) => e["dest_course"]).toList();
-        List<Object?> andReq =  eqCourseObj.map((e) => e["and_req"]).toList();
+        List<Object?> eqCourse =
+            eqCourseObj.map((e) => e["dest_course"]).toList();
+        List<Object?> andReq = eqCourseObj.map((e) => e["and_req"]).toList();
 
         /*
         print("SRC COURSE: ${courseHistory[i]}");
@@ -87,12 +87,20 @@ class Model {
         print(andReq.length);
         */
 
-        if(eqCourse.isNotEmpty && (andReq.isEmpty || "${andReq[0]}" == "")) {
+        if (eqCourse.isNotEmpty && (andReq.isEmpty || "${andReq[0]}" == "")) {
           courseHistory[i] = eqCourse[0] as String;
-        }
-        else if (eqCourse.isNotEmpty) {
-        }
-        else {
+        } else if (eqCourse.isNotEmpty) {
+          if (!eqCourseMap.containsKey(eqCourse[0] as String)) {
+            eqCourseMap[eqCourse[0] as String] = [];
+          }
+          eqCourseMap[eqCourse[0] as String]?.add(courseHistory[i]);
+
+          if (eqCourseMap[eqCourse[0]]?.length as int > 1) {
+            courseHistory[i] = eqCourse[0] as String;
+          } else {
+            courseHistory[i] = "";
+          }
+        } else {
           courseHistory[i] = "";
         }
       }
@@ -112,7 +120,8 @@ class Model {
         "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
   }
 
-  Future<void> addCourseToHist(String courseSchoolID, String selectedCourse) async {
+  Future<void> addCourseToHist(
+      String courseSchoolID, String selectedCourse) async {
     print("BEFORE ADD CH: ");
     print(await _db.rawQuery(
         "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
@@ -164,7 +173,8 @@ class Model {
   //School methods
   Future<List<DropdownMenuItem<String>>> getSchoolNames() async {
     print("starting getSchoolNames()\n");
-    List<Map<String, Object?>> schoolList = await _db.rawQuery("SELECT school_id, s_name FROM school");
+    List<Map<String, Object?>> schoolList =
+        await _db.rawQuery("SELECT school_id, s_name FROM school");
     //print("contents of schoolNameList: $schoolNameList\n");
     List<Object?> schoolIDs = schoolList.map((e) => e["school_id"]).toList();
     List<Object?> schoolNames = schoolList.map((e) => e["s_name"]).toList();
@@ -198,12 +208,12 @@ class Model {
     return degrees;
   }
 
-  Future<List<DropdownMenuItem<String>>> getCourses(
-      String collegeID) async {
+  Future<List<DropdownMenuItem<String>>> getCourses(String collegeID) async {
     print("starting getCourses()\n");
     List<Map<String, Object?>> courseObjects = await _db.rawQuery(
         "SELECT course.school_id, course_prefix, course_num FROM school JOIN course ON school.school_id=course.school_id WHERE course.school_id = \'$collegeID\'");
-    List<Object?> prefixList = courseObjects.map((e) => e["course_prefix"]).toList();
+    List<Object?> prefixList =
+        courseObjects.map((e) => e["course_prefix"]).toList();
     List<Object?> numList = courseObjects.map((e) => e["course_num"]).toList();
     //selectedCollegeID = courseObjects[0]['school_id'].toString();
     List<DropdownMenuItem<String>> courseDropdownMenuItems = [];
@@ -212,7 +222,8 @@ class Model {
       course += "-";
       course += numList[i] as String;
       print(course);
-      courseDropdownMenuItems.add(DropdownMenuItem(value: course, child: Text(course)));
+      courseDropdownMenuItems
+          .add(DropdownMenuItem(value: course, child: Text(course)));
     }
     print("End of getCourses()\n");
     return courseDropdownMenuItems;
@@ -223,25 +234,32 @@ class Model {
 
   Future<List<Plan>> getPlans() async {
     print("START OF getPlans");
-    final List<Map<String, Object?>> planObjects = await _db.rawQuery("SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'");
-    print(await _db.rawQuery("SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
+    final List<Map<String, Object?>> planObjects = await _db.rawQuery(
+        "SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'");
+    print(await _db.rawQuery(
+        "SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
     print("END OF getPlans");
     return planObjects.map((e) => Plan.fromMap(e)).toList();
   }
 
   Future<void> addPlan(Plan plan) async {
     print("BEFORE addPlan\n");
-    print(await _db.rawQuery("SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
-    await _db.rawQuery("INSERT INTO plan(date_created, owner, school_id, deg_name) VALUES ('${plan.getDateCreated()}', '${plan.getOwner()}', '${plan.getSchoolID()}', '${plan.getDegName()}')");
+    print(await _db.rawQuery(
+        "SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
+    await _db.rawQuery(
+        "INSERT INTO plan(date_created, owner, school_id, deg_name) VALUES ('${plan.getDateCreated()}', '${plan.getOwner()}', '${plan.getSchoolID()}', '${plan.getDegName()}')");
     print("AFTER addPlan\n");
-    print(await _db.rawQuery("SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
+    print(await _db.rawQuery(
+        "SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
   }
 
   Future<List<String>> getReqNeeded(Plan plan) async {
     print("START OF getReqNeeded");
-    final List<Map<String, Object?>> reqObjects = await _db.rawQuery("SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
+    final List<Map<String, Object?>> reqObjects = await _db.rawQuery(
+        "SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
 
-    List<Object?> prefixList = reqObjects.map((e) => e["course_prefix"]).toList();
+    List<Object?> prefixList =
+        reqObjects.map((e) => e["course_prefix"]).toList();
     List<Object?> numList = reqObjects.map((e) => e["course_num"]).toList();
     List<Object?> categoryList = reqObjects.map((e) => e["category"]).toList();
     List<Object?> catReqList = reqObjects.map((e) => e["cat_req"]).toList();
@@ -261,25 +279,25 @@ class Model {
     for (int i = 0; i < numList.length; i++) {
       if ((categoryList[i] as String).isEmpty) {
         reqNeeded.add(courseList[i]);
-      }
-      else {
+      } else {
         String category = categoryList[i] as String;
         if (!map.containsKey(category)) {
           map[category] = (catReqList[i] as int) - 1;
           reqNeeded.add(category);
-        }
-        else if (map[category]! > 0) {
+        } else if (map[category]! > 0) {
           map[category] = (map[category]!) - 1;
           reqNeeded.add(category);
         }
       }
     }
-    List<String> courseHist = await getEquivalentCourseHistory(plan.getSchoolID());
+    List<String> courseHist =
+        await getEquivalentCourseHistory(plan.getSchoolID());
     for (String course in courseHist) {
       if (reqNeeded.contains(course)) {
         reqNeeded.remove(course);
-      }
-      else if (courseList.contains(course) && reqNeeded.contains(categoryList[courseList.indexOf(course)] as String)) {
+      } else if (courseList.contains(course) &&
+          reqNeeded
+              .contains(categoryList[courseList.indexOf(course)] as String)) {
         reqNeeded.remove(categoryList[courseList.indexOf(course)] as String);
       }
     }
@@ -289,8 +307,10 @@ class Model {
 
   Future<List<String>> getReqMet(Plan plan) async {
     print("START OF getReqMet");
-    final List<Map<String, Object?>> reqObjects = await _db.rawQuery("SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
-    List<Object?> prefixList = reqObjects.map((e) => e["course_prefix"]).toList();
+    final List<Map<String, Object?>> reqObjects = await _db.rawQuery(
+        "SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
+    List<Object?> prefixList =
+        reqObjects.map((e) => e["course_prefix"]).toList();
     List<Object?> numList = reqObjects.map((e) => e["course_num"]).toList();
     List<String> allReqs = [];
     for (int i = 0; i < numList.length; i++) {
@@ -298,15 +318,16 @@ class Model {
       allReqs.add(course);
     }
     List<String> courseHist = await getCourseHistory();
-    List<String> courseEquivHist = await getEquivalentCourseHistory(plan.getSchoolID());
+    List<String> courseEquivHist =
+        await getEquivalentCourseHistory(plan.getSchoolID());
     List<String> reqMet = [];
     print("reqMet before removing non-relevant courses: $reqMet");
     for (int i = 0; i < courseHist.length; i++) {
       if (allReqs.contains(courseEquivHist[i])) {
-        if(courseEquivHist[i] != courseHist[i]) {
-          reqMet.add("${courseEquivHist[i]} (from ${courseHist[i]})");
-        }
-        else {
+        // TODO: make it so this works for AND reqs (multiple courses)
+        if (courseEquivHist[i] != courseHist[i]) {
+          reqMet.add("${courseEquivHist[i]}"); //(from ${courseHist[i]})");
+        } else {
           reqMet.add("${courseEquivHist[i]}");
         }
       }
@@ -314,6 +335,4 @@ class Model {
     print("reqMet after adding courses: $reqMet\nEND OF getReqMet");
     return reqMet;
   }
-
-
 }
