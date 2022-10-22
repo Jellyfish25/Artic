@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import '../data_classes/Plan.dart';
 import '../constants.dart';
 import '../data_classes/Model.dart';
 import 'ComparisonScreen.dart';
@@ -11,22 +11,32 @@ class CompareDegree extends StatefulWidget {
   const CompareDegree({Key? key, required this.model}) : super(key: key);
 
   @override
-  _CompareDegreeState createState() => _CompareDegreeState(model);
-  static const String id = 'CompareDegree';
+  State<CompareDegree> createState() => _CompareDegreeState(model);
+  //static const String id = 'CompareDegree';
 }
 
 class _CompareDegreeState extends State<CompareDegree> {
   Model model;
   final List<int> _selectedItems = <int>[];
   int count = 0;
+  late List<Plan> plans = [];
+  int planIndex = -1;
 
-  _CompareDegreeState(this.model);
+  _CompareDegreeState(this.model) {
+    setPlans();
+  }
+
+  Future<void> setPlans() async {
+    plans = await model.getPlans();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    int plansLength = plans.length;
     return Scaffold(
       appBar: KAppBar(
-        title: 'Compare Degrees',
+        title: 'Compare Plans',
         model: model,
       ),
       body: SingleChildScrollView(
@@ -50,7 +60,7 @@ class _CompareDegreeState extends State<CompareDegree> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      'Degree list',
+                      'Your Plans',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w700,
                         fontStyle: FontStyle.normal,
@@ -66,7 +76,7 @@ class _CompareDegreeState extends State<CompareDegree> {
                     const SizedBox(height: 5),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: fruit.length,
+                        itemCount: plansLength,
                         itemBuilder: (context, index) {
                           return Container(
                             color: (_selectedItems.contains(index))
@@ -78,7 +88,7 @@ class _CompareDegreeState extends State<CompareDegree> {
                                   if (count != 2) {
                                     setState(() {
                                       _selectedItems.add(index);
-                                      indexes.add(index);
+                                      //indexes.add(index);
                                       count++;
                                     });
                                   }
@@ -86,7 +96,7 @@ class _CompareDegreeState extends State<CompareDegree> {
                                   setState(() {
                                     _selectedItems
                                         .removeWhere((val) => val == index);
-                                    indexes.removeWhere((val) => val == index);
+                                    //indexes.removeWhere((val) => val == index);
                                     count--;
                                   });
                                 }
@@ -98,7 +108,7 @@ class _CompareDegreeState extends State<CompareDegree> {
                               title: Align(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  fruit[index],
+                                  plans[index].degName,
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 20.0,
@@ -126,7 +136,11 @@ class _CompareDegreeState extends State<CompareDegree> {
                     borderRadius: BorderRadius.circular(22.0)),
                 onPressed: () {
                   count == 2
-                      ? Get.to(() => ComparisonScreen(model))
+                      ? Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ComparisonScreen(model: model, plan1: plans[_selectedItems[0]], plan2: plans[_selectedItems[1]])))
                       : showAlertDialog(context);
                 },
                 child: Text(

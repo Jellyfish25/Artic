@@ -5,19 +5,50 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants.dart';
 import '../data_classes/Model.dart';
+import '../data_classes/Plan.dart';
 
-class ComparisonScreen extends StatelessWidget {
+class ComparisonScreen extends StatefulWidget {
   final Model model;
-  static const String id = 'CompareDegree';
-  int count = 0;
+  final Plan plan1;
+  final Plan plan2;
 
-  ComparisonScreen(this.model);
+  const ComparisonScreen({Key? key, required this.model, required this.plan1, required this.plan2})
+      : super(key: key);
+
+  @override
+  State<ComparisonScreen> createState() => _ComparisonScreenState(model, plan1, plan2);
+}
+
+class _ComparisonScreenState extends State<ComparisonScreen> {
+  Model model;
+  Plan plan1;
+  Plan plan2;
+  late List<String> reqNeeded1 = [];
+  late List<String> reqNeeded2 = [];
+  late List<String> shared = [];
+  late int sharedLength = 0;
+
+  _ComparisonScreenState(this.model, this.plan1, this.plan2) {
+    setReqNeeded();
+  }
+
+  Future<void> setReqNeeded() async {
+    reqNeeded1 = await model.getReqNeeded(plan1);
+    reqNeeded2 = await model.getReqNeeded(plan2);
+
+    shared.addAll(reqNeeded1);
+    shared.removeWhere((item) => !reqNeeded2.contains(item));
+
+    sharedLength = shared.length;
+    
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: KAppBar(
-        title: 'Compare Degrees',
+        title: 'Compare Plans',
         model: model,
       ),
       body: SingleChildScrollView(
@@ -28,7 +59,7 @@ class ComparisonScreen extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  'Degrees:',
+                  'Plans:',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20.0,
@@ -38,30 +69,36 @@ class ComparisonScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 5.0),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 7.5,
-              child: ListView.builder(
-                itemCount: indexes.length,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    dense: true,
-                    visualDensity: const VisualDensity(vertical: -3),
-                    title: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        fruit[indexes[index]],
-                        style: GoogleFonts.roboto(
-                          color: Colors.black,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w400,
-                        ),
+            ListTile(
+                  dense: true,
+                  visualDensity: const VisualDensity(vertical: -3),
+                  title: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      plan1.degName,
+                      style: GoogleFonts.roboto(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                  );
-                },
+                  ),
+                ),
+            ListTile(
+                  dense: true,
+                  visualDensity: const VisualDensity(vertical: -3),
+                  title: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      plan2.degName,
+                      style: GoogleFonts.roboto(
+                      color: Colors.black,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
               ),
-            ),
             Center(
               child: Container(
                 // adjust container width/height to fit box better
@@ -96,17 +133,17 @@ class ComparisonScreen extends StatelessWidget {
                     Expanded(
                       child: GridView.builder(
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 5,
                         ),
-                        itemCount: fruit.length,
+                        itemCount: sharedLength,
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: Align(
                               alignment: Alignment.center,
                               child: Text(
-                                fruit[index],
+                                '${index+1}. ${shared[index]}',
                                 style: GoogleFonts.roboto(
                                   color: Colors.black,
                                   fontSize: 12.0,
@@ -140,7 +177,7 @@ class ComparisonScreen extends StatelessWidget {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      '${fruit[indexes[0]]} Courses',
+                      '${plan1.degName} Courses',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w700,
                         fontStyle: FontStyle.normal,
@@ -157,17 +194,17 @@ class ComparisonScreen extends StatelessWidget {
                     Expanded(
                       child: GridView.builder(
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 5,
                         ),
-                        itemCount: fruit.length,
+                        itemCount: reqNeeded1.length,
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: Align(
                               alignment: Alignment.center,
                               child: Text(
-                                fruit[index],
+                                '${index + 1}. ${reqNeeded1[index]}',
                                 style: GoogleFonts.roboto(
                                   color: Colors.black,
                                   fontSize: 12.0,
@@ -201,7 +238,7 @@ class ComparisonScreen extends StatelessWidget {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      '${fruit[indexes[0]]} Courses',
+                      '${plan2.degName} Courses',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w700,
                         fontStyle: FontStyle.normal,
@@ -218,17 +255,17 @@ class ComparisonScreen extends StatelessWidget {
                     Expanded(
                       child: GridView.builder(
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 5,
                         ),
-                        itemCount: fruit.length,
+                        itemCount: reqNeeded2.length,
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: Align(
                               alignment: Alignment.center,
                               child: Text(
-                                fruit[index],
+                                '${index + 1}. ${reqNeeded2[index]}',
                                 style: GoogleFonts.roboto(
                                   color: Colors.black,
                                   fontSize: 12.0,
