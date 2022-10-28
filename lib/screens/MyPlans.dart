@@ -110,7 +110,7 @@ class _MyPlansState extends State<MyPlans> {
                         // adjust offset to change the icon to text spacing
                         offset: const Offset(0, 0),
                         child: Text(
-                          plans[index].getDegName(),
+                          '${model.getPlanSchoolName(plans[index])} - ${plans[index].getDegName()}',
                           style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w700,
                             fontStyle: FontStyle.normal,

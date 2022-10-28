@@ -253,6 +253,14 @@ class Model {
         "SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
   }
 
+  Future<String> getPlanSchoolName(Plan plan) async {
+    print("PLAN SCHOOL ID: ${plan.getSchoolID()}");
+    List<Map<String, Object?>> planSchoolNameMap = await _db.rawQuery("SELECT s_name FROM school WHERE school_id = ${plan.getSchoolID()}");
+    List<Object?> planSchoolNameList = planSchoolNameMap.map((e) => e["school_id"]).toList();
+    print("PLAN SCHOOL LIST: $planSchoolNameList");
+    return planSchoolNameList[0] as String;
+  }
+
   Future<List<String>> getReqNeeded(Plan plan) async {
     print("START OF getReqNeeded");
     final List<Map<String, Object?>> reqObjects = await _db.rawQuery(
