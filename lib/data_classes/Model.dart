@@ -255,8 +255,10 @@ class Model {
 
   Future<String> getPlanSchoolName(Plan plan) async {
     print("PLAN SCHOOL ID: ${plan.getSchoolID()}");
-    List<Map<String, Object?>> planSchoolNameMap = await _db.rawQuery("SELECT s_name FROM school WHERE school_id = ${plan.getSchoolID()}");
-    List<Object?> planSchoolNameList = planSchoolNameMap.map((e) => e["school_id"]).toList();
+    List<Map<String, Object?>> planSchoolNameMap = await _db.rawQuery(
+        "SELECT s_name FROM school WHERE school_id = \'${plan.getSchoolID()}\'");
+    List<Object?> planSchoolNameList =
+        planSchoolNameMap.map((e) => e["s_name"]).toList();
     print("PLAN SCHOOL LIST: $planSchoolNameList");
     return planSchoolNameList[0] as String;
   }

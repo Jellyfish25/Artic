@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants.dart';
 import '../data_classes/Model.dart';
@@ -18,6 +19,8 @@ class MyPlans extends StatefulWidget {
 class _MyPlansState extends State<MyPlans> {
   Model model;
   late List<Plan> plans = [];
+  late List<String> planSchool = [];
+
   int planIndex = -1;
   int favoriteIndex = -1;
   String favoritePlan = '';
@@ -27,6 +30,10 @@ class _MyPlansState extends State<MyPlans> {
   }
   Future<void> setPlans() async {
     plans = await model.getPlans();
+    for (Plan p in plans) {
+      print("Plan: ${p.toString()}");
+      planSchool.add(await model.getPlanSchoolName(p));
+    }
     setState(() {});
   }
 
@@ -86,8 +93,8 @@ class _MyPlansState extends State<MyPlans> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    ViewPlan(model: model, plan: plans[index])));
+                                builder: (context) => ViewPlan(
+                                    model: model, plan: plans[index])));
                       },
                       leading: IconButton(
                         color: Colors.black,
@@ -110,11 +117,11 @@ class _MyPlansState extends State<MyPlans> {
                         // adjust offset to change the icon to text spacing
                         offset: const Offset(0, 0),
                         child: Text(
-                          '${model.getPlanSchoolName(plans[index])} - ${plans[index].getDegName()}',
+                          '${planSchool[index]} - ${plans[index].getDegName()}',
                           style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w700,
                             fontStyle: FontStyle.normal,
-                            fontSize: 24,
+                            fontSize: 18,
                           ),
                         ),
                       ),
