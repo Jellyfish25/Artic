@@ -4,7 +4,7 @@ import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:search_choices/search_choices.dart';
-
+import 'package:textfield_tags/textfield_tags.dart';
 import 'Overview.dart';
 
 class ExploreMajors extends StatefulWidget {
@@ -20,25 +20,11 @@ class ExploreMajors extends StatefulWidget {
 class _ExploreMajorsState extends State<ExploreMajors> {
   Model model;
   bool showSpinner = false;
-
-  _ExploreMajorsState(this.model);
+  TextfieldTagsController _controller = TextfieldTagsController();
 
   // Tester data for searchable dropdown
   List<int> selectedColleges = [];
-  final List<DropdownMenuItem> colleges = [
-    const DropdownMenuItem(
-        value: "San Jose State University (SJSU)",
-        child: Text("San Jose State University (SJSU)")),
-    const DropdownMenuItem(
-        value: "University of California San Diego (USCD)",
-        child: Text("University of California San Diego (USCD)")),
-    const DropdownMenuItem(
-        value: "University of California Los Angeles (UCLA)",
-        child: Text("University of California Los Angeles (UCLA)")),
-    const DropdownMenuItem(
-        value: "California State University San Marcos (CSUSM)",
-        child: Text("California State University San Marcos (CSUSM)")),
-  ];
+  late List<DropdownMenuItem> colleges = [];
 
   List<int> selectedMajors = [];
   final List<DropdownMenuItem> majors = [
@@ -54,6 +40,21 @@ class _ExploreMajorsState extends State<ExploreMajors> {
     const DropdownMenuItem(
         value: "B.A. Philosophy", child: Text("B.A. Philosophy")),
   ];
+
+  _ExploreMajorsState(this.model) {
+    setColleges();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  Future<void> setColleges() async {
+    colleges = await model.getSchoolNames();
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -106,7 +107,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                   },
                   closeButton: (selectedColleges) {
                     return (selectedColleges.isNotEmpty
-                        ? "Save ${selectedColleges.length == 1 ? '"' + colleges[selectedColleges.first].value.toString() + '"' : '(' + selectedColleges.length.toString() + ')'}"
+                        ? 'Save ${selectedColleges.length} College(s)'
                         : "Save without selection");
                   },
                   isExpanded: true,
@@ -129,25 +130,103 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                 const SizedBox(
                   height: 10.0,
                 ),
-                SearchChoices.multiple(
-                  items: majors,
-                  selectedItems: selectedMajors,
-                  hint: const Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Text("Select any"),
-                  ),
-                  searchHint: "Select any",
-                  onChanged: (value) {
-                    setState(() {
-                      selectedMajors = value;
+                TextFieldTags(
+                  textfieldTagsController: _controller,
+                  initialTags: const [
+                    'Software Engineering',
+                    'Computer Engineering',
+                  ],
+                  textSeparators: const [','],
+                  letterCase: LetterCase.normal,
+                  validator: (String tag) {
+                    if (tag == 'php') {
+                      return 'No, please just no';
+                    } else if (_controller.getTags!.contains(tag)) {
+                      return 'Major is already included';
+                    }
+                    return null;
+                  },
+                  inputfieldBuilder:
+                      (context, tec, fn, error, onChanged, onSubmitted) {
+                    return ((context, sc, tags, onTagDelete) {
+                      return TextField(
+                        controller: tec,
+                        focusNode: fn,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF1375CF),
+                              width: 3.0,
+                            ),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF1375CF),
+                              width: 3.0,
+                            ),
+                          ),
+                          hintText: _controller.hasTags
+                              ? ''
+                              : "Type any then a comma",
+                          errorText: error,
+                          prefixIconConstraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width),
+                          prefixIcon: tags.isNotEmpty
+                              ? SingleChildScrollView(
+                                  controller: sc,
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                      children: tags.map((String tag) {
+                                    return Container(
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0),
+                                        ),
+                                        color: Color(0xFF1375CF),
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 5.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0, vertical: 5.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            child: Text(
+                                              tag,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onTap: () {
+                                              print("$tag selected");
+                                            },
+                                          ),
+                                          const SizedBox(width: 4.0),
+                                          InkWell(
+                                            child: const Icon(
+                                              Icons.cancel,
+                                              size: 14.0,
+                                              color: Color.fromARGB(
+                                                  255, 233, 233, 233),
+                                            ),
+                                            onTap: () {
+                                              onTagDelete(tag);
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }).toList()),
+                                )
+                              : null,
+                        ),
+                        onChanged: onChanged,
+                        onSubmitted: onSubmitted,
+                      );
                     });
                   },
-                  closeButton: (selectedMajors) {
-                    return (selectedMajors.isNotEmpty
-                        ? "Save ${selectedMajors.length == 1 ? '"' + majors[selectedMajors.first].value.toString() + '"' : '(' + selectedMajors.length.toString() + ')'}"
-                        : "Save without selection");
-                  },
-                  isExpanded: true,
                 ),
                 const SizedBox(
                   height: 50.0,
