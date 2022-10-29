@@ -51,7 +51,8 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
         model: model,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.only(
+            top: 15.0, bottom: 15.0, left: 5.0, right: 5.0),
         child: Column(
           children: [
             // SizedBox(
@@ -140,10 +141,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, bottom: 20.0),
+                              padding: const EdgeInsets.only(left: 20.0),
                               child: Align(
-                                alignment: Alignment.centerLeft,
+                                alignment: Alignment.topLeft,
                                 child: Text(
                                   '${index + 1}. ${shared[index]}',
                                   style: GoogleFonts.roboto(
@@ -205,10 +205,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, bottom: 20.0),
+                              padding: const EdgeInsets.only(left: 20.0),
                               child: Align(
-                                alignment: Alignment.centerLeft,
+                                alignment: Alignment.topLeft,
                                 child: Text(
                                   '${index + 1}. ${reqNeeded1[index]}',
                                   style: GoogleFonts.roboto(
@@ -270,10 +269,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, bottom: 20.0),
+                              padding: const EdgeInsets.only(left: 20.0),
                               child: Align(
-                                alignment: Alignment.centerLeft,
+                                alignment: Alignment.topLeft,
                                 child: Text(
                                   '${index + 1}. ${reqNeeded2[index]}',
                                   style: GoogleFonts.roboto(
