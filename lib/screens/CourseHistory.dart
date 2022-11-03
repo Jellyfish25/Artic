@@ -18,17 +18,15 @@ class CourseHistory extends StatefulWidget {
 class _CourseHistoryState extends State<CourseHistory> {
   late Model model;
   late List<String> courseList = [];
-  String selectedCollegeid = ""; //TODO: udpate
+  String selectedCollegeID = "";
   String selectedCourse = "";
 
   List<DropdownMenuItem> colleges = [];
   List<DropdownMenuItem> courseDropdownMenuItems = [];
-  //String selectedCollegeID = "";
 
   _CourseHistoryState(this.model) {
     print("constructor started");
     setColleges();
-    //courseList = model.getCourseHistory();
     setCourseList();
     print("constructor ended");
   }
@@ -45,18 +43,6 @@ class _CourseHistoryState extends State<CourseHistory> {
 
   Future<void> setCourses(String collegeid) async {
     courseDropdownMenuItems = await model.getCourses(collegeid);
-    // List<Object?> prefixList =
-    // courseObjects.map((e) => e["course_prefix"]).toList();
-    // List<Object?> numList = courseObjects.map((e) => e["course_num"]).toList();
-    // selectedCollegeID = courseObjects[0]['school_id'].toString();
-    // courseDropdownMenuItems = [];
-    // for (int i = 0; i < numList.length; i++) {
-    //   String course = prefixList[i] as String;
-    //   course += "-";
-    //   course += numList[i] as String;
-    //   print(course);
-    //   courseDropdownMenuItems.add(DropdownMenuItem(value: course, child: Text(course)));
-    // }
     setState(() {});
   }
 
@@ -149,7 +135,7 @@ class _CourseHistoryState extends State<CourseHistory> {
             ),
             const SizedBox(height: 5.0),
             SearchChoices.single(
-              value: selectedCollegeid,
+              value: selectedCollegeID,
               items: colleges,
               hint: const Padding(
                 padding: EdgeInsets.all(12.0),
@@ -157,11 +143,20 @@ class _CourseHistoryState extends State<CourseHistory> {
               ),
               onChanged: (value) {
                 setState(() {
-                  selectedCollegeid = value; //?
-                  setCourses(selectedCollegeid);
+                  selectedCollegeID = value; //?
+                  setCourses(selectedCollegeID);
                 });
               },
               isExpanded: true,
+              searchFn: (keyword, items) { // returns indexes of items that are relevant to the keyword
+                List<int> result = [];
+                for (int i = 0; i < items.length; i++) {
+                  if (items[i].child.toString().toLowerCase().contains(keyword.toLowerCase())) {
+                    result.add(i);
+                  }
+                }
+                return result;
+              },
             ),
             const SizedBox(height: 15.0),
             SearchChoices.single(
@@ -188,11 +183,11 @@ class _CourseHistoryState extends State<CourseHistory> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(22.0)),
               onPressed: () {
-                if (selectedCollegeid != "" &&
+                if (selectedCollegeID != "" &&
                     selectedCourse != "" &&
                     !courseList.contains(selectedCourse)) {
                   setState(() {
-                    model.addCourseToHist(selectedCollegeid, selectedCourse);
+                    model.addCourseToHist(selectedCollegeID, selectedCourse);
                     courseList.add(selectedCourse);
                     selectedCourse = "";
                   });

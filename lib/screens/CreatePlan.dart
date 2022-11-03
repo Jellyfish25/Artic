@@ -66,6 +66,15 @@ class _CreatePlanState extends State<CreatePlan> {
                   });
                 },
                 isExpanded: true,
+                searchFn: (keyword, items) { // returns indexes of items that are relevant to the keyword
+                  List<int> result = [];
+                  for (int i = 0; i < items.length; i++) {
+                    if (items[i].child.toString().toLowerCase().contains(keyword.toLowerCase())) {
+                      result.add(i);
+                    }
+                  }
+                  return result;
+                },
               ),
               const SizedBox(height: 10.0),
               SearchChoices.single(
@@ -83,6 +92,15 @@ class _CreatePlanState extends State<CreatePlan> {
                   });
                 },
                 isExpanded: true,
+                searchFn: (keyword, items) { // returns indexes of items that are relevant to the keyword
+                  List<int> result = [];
+                  for (int i = 0; i < items.length; i++) {
+                    if (items[i].child.toString().toLowerCase().contains(keyword.toLowerCase())) {
+                      result.add(i);
+                    }
+                  }
+                  return result;
+                },
               ),
               const SizedBox(height: 10.0),
               SearchChoices.single(
