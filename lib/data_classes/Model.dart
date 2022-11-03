@@ -345,4 +345,21 @@ class Model {
     print("reqMet after adding courses: $reqMet\nEND OF getReqMet");
     return reqMet;
   }
+
+  Future<List<String>> getPossibleMajors(List<String> schoolIDs, List<String> keywords) async {
+    print(schoolIDs);
+    print(keywords);
+    List<String> majors = [];
+    for (String schoolID in schoolIDs) {
+      for (String keyword in keywords) {
+        List<Map<String, Object?>> objects = await _db.rawQuery(
+            "SELECT (s_name || \"-\" || deg_name) AS major FROM degree JOIN school ON degree.school_id=school.school_id WHERE degree.school_id = '$schoolID' AND deg_name LIKE '%$keyword%'");
+        List<Object?> majorObjs = objects.map((e) => e["major"]).toList();
+        for (Object? o in majorObjs) {
+          majors.add(o as String);
+        }
+      }
+    }
+    return majors;
+  }
 }

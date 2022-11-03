@@ -213,7 +213,6 @@ showAlertDialog(BuildContext context,
           TextButton(
             onPressed: () {
               agreed = true;
-
               Navigator.push(
                   context,
                   MaterialPageRoute(

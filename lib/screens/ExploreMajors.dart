@@ -2,10 +2,10 @@ import 'package:artic/components/rounded_button.dart';
 import 'package:artic/constants.dart';
 import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:textfield_tags/textfield_tags.dart';
-import 'Overview.dart';
+
+import 'PossibleMajors.dart';
 
 class ExploreMajors extends StatefulWidget {
   final Model model;
@@ -19,27 +19,13 @@ class ExploreMajors extends StatefulWidget {
 
 class _ExploreMajorsState extends State<ExploreMajors> {
   Model model;
-  bool showSpinner = false;
   TextfieldTagsController _controller = TextfieldTagsController();
 
   // Tester data for searchable dropdown
   List<int> selectedColleges = [];
   late List<DropdownMenuItem> colleges = [];
-
-  List<int> selectedMajors = [];
-  final List<DropdownMenuItem> majors = [
-    const DropdownMenuItem(
-        value: "B.S. Computer Engineering",
-        child: Text("B.S. Computer Engineering")),
-    const DropdownMenuItem(
-        value: "B.A. Business Marketing",
-        child: Text("B.A. Business Marketing")),
-    const DropdownMenuItem(
-        value: "B.S. Software Engineering",
-        child: Text("B.S. Software Engineering")),
-    const DropdownMenuItem(
-        value: "B.A. Philosophy", child: Text("B.A. Philosophy")),
-  ];
+  late List<String> schoolIDs = [];
+  late List<String> keywords = [];
 
   _ExploreMajorsState(this.model) {
     setColleges();
@@ -69,9 +55,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
       appBar: KAppBar(title: "Explore Majors", model: model),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10.0),
-        child: ModalProgressHUD(
-          inAsyncCall: showSpinner,
-          child: Padding(
+        child: Padding(
             padding:
                 const EdgeInsets.symmetric(vertical: 40.0, horizontal: 24.0),
             child: Column(
@@ -141,16 +125,10 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                 ),
                 TextFieldTags(
                   textfieldTagsController: _controller,
-                  initialTags: const [
-                    'Software Engineering',
-                    'Computer Engineering',
-                  ],
                   textSeparators: const [','],
                   letterCase: LetterCase.normal,
                   validator: (String tag) {
-                    if (tag == 'php') {
-                      return 'No, please just no';
-                    } else if (_controller.getTags!.contains(tag)) {
+                    if (_controller.getTags!.contains(tag)) {
                       return 'Major is already included';
                     }
                     return null;
@@ -177,7 +155,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                           ),
                           hintText: _controller.hasTags
                               ? ''
-                              : "Type any then a comma",
+                              : "Type a keyword and end it with a comma",
                           errorText: error,
                           prefixIconConstraints: BoxConstraints(
                               maxWidth: MediaQuery.of(context).size.width),
@@ -244,33 +222,25 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                     title: 'Explore',
                     color: const Color(0xFF1375CF),
                     onPressed: () async {
-                      setState(() {
-                        showSpinner = true;
-                      });
-
-                      try {
-                        final user = null; // filler code until DB is set up
-                        /*
-                      final user = await _auth.signInWithEmailAndPassword(
-                          email: email, password: password);
-                       */
-                        if (user != '') {
-                          Navigator.pushNamed(context, Overview.id);
-                        }
-
-                        setState(() {
-                          showSpinner = false;
-                        });
-                      } catch (e) {
-                        print(e);
+                      schoolIDs.clear();
+                      keywords.clear();
+                      for (int index in selectedColleges) {
+                          schoolIDs.add(colleges[index].value);
                       }
+                      for (String tag in _controller.getTags!) {
+                          keywords.add(tag);
+                      }
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  PossibleMajors(schoolIDs: schoolIDs, keywords: keywords, model: model)));
                     },
                     height: 50.0,
                     width: 250.0),
               ],
             ),
           ),
-        ),
       ),
       drawer: getKNavBar(model),
     );
