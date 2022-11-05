@@ -31,6 +31,10 @@ class _SignupScreenState extends State<SignupScreen> {
   String password = ''; // made these '' just to silence errors
   String confirmPassword = '';
 
+  String SQ1 = '';
+  String SQ2 = '';
+  String SQ3 = '';
+
   _SignupScreenState(this.model);
 
   @override
@@ -88,7 +92,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       labelText: 'Email Address'),
                 ),
                 const SizedBox(
-                  height: 10.0,
+                  height: 20.0,
                 ),
                 TextField(
                   obscureText: true,
@@ -114,6 +118,48 @@ class _SignupScreenState extends State<SignupScreen> {
                       icon: const Icon(Icons.vpn_key_outlined),
                       hintText: 'Confirm Password',
                       labelText: 'Confirm Password'),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                TextField(
+                  obscureText: true,
+                  textAlign: TextAlign.left,
+                  onChanged: (value) {
+                   SQ1 = value;
+                  },
+                  decoration: kTextFieldDecoration.copyWith(
+                      icon: const Icon(Icons.lock),
+                      hintText: 'Favorite trumpet',
+                      labelText: 'Security Question 1'),
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                TextField(
+                  obscureText: true,
+                  textAlign: TextAlign.left,
+                  onChanged: (value) {
+                    SQ2 = value;
+                  },
+                  decoration: kTextFieldDecoration.copyWith(
+                      icon: const Icon(Icons.lock),
+                      hintText: 'Favorite color',
+                      labelText: 'Security Question 2'),
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                TextField(
+                  obscureText: true,
+                  textAlign: TextAlign.left,
+                  onChanged: (value) {
+                    SQ3 = value;
+                  },
+                  decoration: kTextFieldDecoration.copyWith(
+                      icon: const Icon(Icons.lock),
+                      hintText: 'Favorite oxymoron',
+                      labelText: 'Security Question 3'),
                 ),
                 const SizedBox(
                   height: 12.0,

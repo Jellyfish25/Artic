@@ -1,6 +1,7 @@
 import 'package:artic/screens/CourseHistory.dart';
 import 'package:artic/screens/ExploreMajors.dart';
 import 'package:artic/screens/Overview.dart';
+import 'package:artic/screens/EditAccount.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -163,7 +164,9 @@ SizedBox getKNavBar(Model model) {
               dense: true,
               visualDensity: const VisualDensity(vertical: -3),
               title: const KNavBarText(title: "Edit Account"),
-              onTap: () {},
+              onTap: () {
+                Get.to(() => EditAcc(model:model));
+              },
             )
           ],
         )),
