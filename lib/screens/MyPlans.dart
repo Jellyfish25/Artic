@@ -43,6 +43,7 @@ class _MyPlansState extends State<MyPlans> {
   @override
   Widget build(BuildContext context) {
     int plansLength = plans.length;
+    int selectedIndex;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -102,13 +103,18 @@ class _MyPlansState extends State<MyPlans> {
                       leading: IconButton(
                         color: Colors.black,
                         onPressed: () {
-                          favoriteIndex = index;
-                          favoritePlan = plans[index].getDegName();
-                          model.setFavePlan(plans[index].getPlanID());
+                          if (favoriteIndex == index) {
+                            favoriteIndex = -1;
+                            favoritePlan = '';
+                            model.setFavePlan(-1);
+                          } else {
+                            favoriteIndex = index;
+                            favoritePlan = plans[index].getDegName();
+                            model.setFavePlan(plans[index].getPlanID());
+                          }
                           print('favorite plan: $favoritePlan');
-                          setState(() {
-
-                          });
+                          print('favorite index: $favoriteIndex');
+                          setState(() {});
                         },
                         icon: favoriteIndex == index
                             ? const Icon(Icons.star,
@@ -139,9 +145,12 @@ class _MyPlansState extends State<MyPlans> {
                             // implement removePlan in model
                             model.removePlan(plans[index]);
                             plans.removeAt(index);
+                            if (index <= favoriteIndex) {
+                              favoriteIndex--;
+                            }
                           });
                         },
-                        icon: const Icon(Icons.restore_from_trash),
+                        icon: const Icon(Icons.close),
                       ),
                     ),
                   );

@@ -2,7 +2,7 @@ import 'package:artic/screens/Overview.dart';
 import 'package:artic/screens/SignupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:artic/Screens/HowDoIUseThisApp.dart';
 import '../screens/SignupPage.dart';
 import 'LoginScreen.dart';
 
@@ -100,7 +100,7 @@ class WelcomeScreen extends StatelessWidget {
             const SizedBox(height: 13),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, Overview.id);
+                Navigator.pushNamed(context, HowDoIUseThisApp.id);
               },
               child: Text(
                 'How do I use this app?',

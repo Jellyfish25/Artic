@@ -14,6 +14,7 @@ import '../screens/Overview.dart';
 import '../screens/SignupPage.dart';
 import '../screens/WelcomeScreen.dart';
 import '../screens/EditAccount.dart';
+import '../screens/HowDoIUseThisApp.dart';
 
 void main() => runApp(const Artic());
 
@@ -37,7 +38,8 @@ class Artic extends StatelessWidget {
         //ComparisonScreen.id: (context) => ComparisonScreen(model),
         CourseHistory.id: (context) => CourseHistory(model: model),
         CreatePlan.id: (context) => CreatePlan(model: model),
-        EditAcc.id: (context) => EditAcc(model:model),
+        EditAcc.id: (context) => EditAcc(model: model),
+        HowDoIUseThisApp.id: (context) => const HowDoIUseThisApp(),
       },
 
       //home: HomePage(),
