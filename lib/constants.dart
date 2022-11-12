@@ -1,5 +1,6 @@
 import 'package:artic/screens/CourseHistory.dart';
 import 'package:artic/screens/ExploreMajors.dart';
+import 'package:artic/screens/HowDoIUseThisApp.dart';
 import 'package:artic/screens/Overview.dart';
 import 'package:artic/screens/EditAccount.dart';
 import 'package:flutter/material.dart';
@@ -144,7 +145,9 @@ SizedBox getKNavBar(Model model) {
                 fontColor: Color(0xFF007BFF),
                 decoration: TextDecoration.underline,
               ),
-              onTap: () {},
+              onTap: () {
+                Get.to(() => const HowDoIUseThisApp());
+              },
             ),
             const SizedBox(
               height: 5,
