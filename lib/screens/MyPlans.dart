@@ -145,8 +145,10 @@ class _MyPlansState extends State<MyPlans> {
                             // implement removePlan in model
                             model.removePlan(plans[index]);
                             plans.removeAt(index);
-                            if (index <= favoriteIndex) {
+                            if (index < favoriteIndex) {
                               favoriteIndex--;
+                            } else if (index == favoriteIndex) {
+                              favoriteIndex = -1;
                             }
                           });
                         },
