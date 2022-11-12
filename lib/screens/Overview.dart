@@ -154,7 +154,7 @@ class _OverviewState extends State<Overview> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      'How-To',
+                      'How To Get Started',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w700,
                         fontStyle: FontStyle.normal,
