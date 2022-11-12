@@ -19,20 +19,24 @@ class _MyPlansState extends State<MyPlans> {
   Model model;
   late List<Plan> plans = [];
   late List<String> planSchool = [];
+  late int favoriteIndex;
 
   int planIndex = -1;
-  int favoriteIndex = -1;
   String favoritePlan = '';
 
   _MyPlansState(this.model) {
-    setPlans();
+    setData();
   }
-  Future<void> setPlans() async {
+  Future<void> setData() async {
     plans = await model.getPlans();
     for (Plan p in plans) {
       print("Plan: ${p.toString()}");
       planSchool.add(await model.getPlanSchoolName(p));
     }
+
+    favoriteIndex = await model.getFavePlanIndex();
+    print("FAVE INDEX: $favoriteIndex");
+
     setState(() {});
   }
 
@@ -98,10 +102,12 @@ class _MyPlansState extends State<MyPlans> {
                       leading: IconButton(
                         color: Colors.black,
                         onPressed: () {
+                          favoriteIndex = index;
+                          favoritePlan = plans[index].getDegName();
+                          model.setFavePlan(plans[index].getPlanID());
+                          print('favorite plan: $favoritePlan');
                           setState(() {
-                            favoriteIndex = index;
-                            favoritePlan = plans[index].getDegName();
-                            print('favorite plan: $favoritePlan');
+
                           });
                         },
                         icon: favoriteIndex == index
