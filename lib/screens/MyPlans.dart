@@ -124,6 +124,19 @@ class _MyPlansState extends State<MyPlans> {
                           ),
                         ),
                       ),
+                      trailing: IconButton(
+                        //when pressed, delete from list
+                        onPressed: () {
+                          setState(() {
+                            //print(plans[index]);
+                            //print("removed list");
+                            // implement removePlan in model
+                            model.removePlan(plans[index]);
+                            plans.removeAt(index);
+                          });
+                        },
+                        icon: const Icon(Icons.restore_from_trash),
+                      ),
                     ),
                   );
                 },

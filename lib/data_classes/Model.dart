@@ -253,6 +253,17 @@ class Model {
         "SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
   }
 
+  Future<void> removePlan(Plan plan) async {
+    print("BEFORE removePlan\n");
+    print(await _db.rawQuery(
+        "SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}' AND plan_id = '${plan.getPlanID()}'"));
+    await _db.rawQuery(
+        "DELETE FROM plan WHERE owner = '${_currentUser.getEmail()}' AND plan_id = '${plan.getPlanID()}'");
+    print("AFTER removePlan\n");
+    print(await _db.rawQuery(
+        "SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
+  }
+
   Future<String> getPlanSchoolName(Plan plan) async {
     print("PLAN SCHOOL ID: ${plan.getSchoolID()}");
     List<Map<String, Object?>> planSchoolNameMap = await _db.rawQuery(
@@ -346,7 +357,8 @@ class Model {
     return reqMet;
   }
 
-  Future<List<String>> getPossibleMajors(List<String> schoolIDs, List<String> keywords) async {
+  Future<List<String>> getPossibleMajors(
+      List<String> schoolIDs, List<String> keywords) async {
     print(schoolIDs);
     print(keywords);
     List<String> majors = [];
