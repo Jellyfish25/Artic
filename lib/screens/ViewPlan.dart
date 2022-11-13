@@ -2,7 +2,6 @@ import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:artic/components/rounded_button.dart';
 import '../data_classes/Plan.dart';
 
 class ViewPlan extends StatefulWidget {
@@ -45,7 +44,6 @@ class _ViewPlanState extends State<ViewPlan> {
           const SizedBox(height: 20),
           Text(
             plan.getDegName(),
-            //'B.S. Computer Engineering, SJSU',
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w700,
               fontStyle: FontStyle.normal,
@@ -86,7 +84,17 @@ class _ViewPlanState extends State<ViewPlan> {
                   ),
                   const SizedBox(height: 5),
                   Expanded(
-                    child: ListView.builder(
+                    child: reqNeeded.isEmpty ?
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      child: Text("Congrats, it seems that you've completed all the requirements needed for this degree!",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.normal,
+                            fontSize: 20,
+                          )),
+                    ) : ListView.builder(
                       itemCount: reqNeeded.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Transform.translate(
@@ -145,7 +153,18 @@ class _ViewPlanState extends State<ViewPlan> {
                   ),
                   const SizedBox(height: 5),
                   Expanded(
-                    child: ListView.builder(
+                    child: reqMet.isEmpty ?
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      child: Text("It appears that you haven't met any of this degree's requirements.\n\nDoes this seem right? If not, update your Course History with all the courses you've completed.",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 20,
+                      )),
+                    ) :
+                    ListView.builder(
                       itemCount: reqMet.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Transform.translate(
