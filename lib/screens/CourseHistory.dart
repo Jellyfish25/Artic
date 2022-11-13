@@ -86,37 +86,55 @@ class _CourseHistoryState extends State<CourseHistory> {
                   ),
                   const SizedBox(height: 5),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: courseList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Transform.translate(
-                          // adjust offset to change the list tile left to right spacing
-                          offset: const Offset(20, 0),
-                          child: ListTile(
-                            trailing: IconButton(
-                              color: const Color(0xFF2194D2),
-                              onPressed: () {
-                                setState(() {
-                                  model.removeCourseFromHist(courseList[index]);
-                                  courseList.removeAt(index);
-                                });
-                              },
-                              icon: const Icon(Icons.close),
-                            ),
-                            dense: true,
-                            visualDensity: const VisualDensity(vertical: -3),
-                            title: Text(
-                              '${index + 1}. ${courseList[index]}',
+                    child: courseList.isEmpty
+                        ? Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              "Course List is Currently Empty!\n\n"
+                              "To add a course:\n"
+                              "1. Specify the College\n"
+                              "2. Specify the Course number\n"
+                              "3. Tap the \"Submit\" button",
                               style: GoogleFonts.roboto(
                                 fontWeight: FontWeight.w700,
                                 fontStyle: FontStyle.normal,
                                 fontSize: 20,
                               ),
                             ),
+                          )
+                        : ListView.builder(
+                            itemCount: courseList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Transform.translate(
+                                // adjust offset to change the list tile left to right spacing
+                                offset: const Offset(20, 0),
+                                child: ListTile(
+                                  trailing: IconButton(
+                                    color: const Color(0xFF2194D2),
+                                    onPressed: () {
+                                      setState(() {
+                                        model.removeCourseFromHist(
+                                            courseList[index]);
+                                        courseList.removeAt(index);
+                                      });
+                                    },
+                                    icon: const Icon(Icons.close),
+                                  ),
+                                  dense: true,
+                                  visualDensity:
+                                      const VisualDensity(vertical: -3),
+                                  title: Text(
+                                    '${index + 1}. ${courseList[index]}',
+                                    style: GoogleFonts.roboto(
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
                   ),
                 ],
               ),
@@ -148,10 +166,15 @@ class _CourseHistoryState extends State<CourseHistory> {
                 });
               },
               isExpanded: true,
-              searchFn: (keyword, items) { // returns indexes of items that are relevant to the keyword
+              searchFn: (keyword, items) {
+                // returns indexes of items that are relevant to the keyword
                 List<int> result = [];
                 for (int i = 0; i < items.length; i++) {
-                  if (items[i].child.toString().toLowerCase().contains(keyword.toLowerCase())) {
+                  if (items[i]
+                      .child
+                      .toString()
+                      .toLowerCase()
+                      .contains(keyword.toLowerCase())) {
                     result.add(i);
                   }
                 }

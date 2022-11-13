@@ -43,7 +43,6 @@ class _MyPlansState extends State<MyPlans> {
   @override
   Widget build(BuildContext context) {
     int plansLength = plans.length;
-    int selectedIndex;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -63,72 +62,13 @@ class _MyPlansState extends State<MyPlans> {
                   color: const Color(0xFF2194D2),
                 ),
               ),
-              child: ListView.builder(
-                itemCount: plansLength,
-                itemBuilder: (context, index) {
-                  return Container(
-                    color: Colors.transparent,
-
-                    //******************* Single tap to favorite (single star)
-                    // child: Transform.translate(
-                    //   // adjust offset to change the list tile left to right spacing
-                    //   offset: const Offset(25, 0),
-                    //   child: ListTile(
-                    //     onTap: () {
-                    //       setState(() {
-                    //         planIndex = index;
-                    //         favoritePlan = plans[index];
-                    //       });
-                    //       print('Selected Item index at: $favoritePlan');
-                    //     },
-                    //     leading: Visibility(
-                    //       visible: planIndex == index,
-                    //       child: const Icon(
-                    //         Icons.star,
-                    //         size: 40,
-                    //         color: Colors.black,
-                    //       ),
-                    //     ),
-
-                    //***************** One tap to favorite, one tap to edit
-                    child: ListTile(
-                      onTap: () {
-                        print(plans[index]);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ViewPlan(
-                                    model: model, plan: plans[index])));
-                      },
-                      leading: IconButton(
-                        color: Colors.black,
-                        onPressed: () {
-                          if (favoriteIndex == index) {
-                            favoriteIndex = -1;
-                            favoritePlan = '';
-                            model.setFavePlan(-1);
-                          } else {
-                            favoriteIndex = index;
-                            favoritePlan = plans[index].getDegName();
-                            model.setFavePlan(plans[index].getPlanID());
-                          }
-                          print('favorite plan: $favoritePlan');
-                          print('favorite index: $favoriteIndex');
-                          setState(() {});
-                        },
-                        icon: favoriteIndex == index
-                            ? const Icon(Icons.star,
-                                color: Colors.yellow, size: 30)
-                            : const Icon(Icons.star_border,
-                                //either make it gray, light gray, or white
-                                color: Color(0xD9EEEEEE),
-                                size: 30),
-                      ),
-                      title: Transform.translate(
-                        // adjust offset to change the icon to text spacing
-                        offset: const Offset(0, 0),
+              child: plans.isEmpty
+                  ? Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          '${planSchool[index]} - ${plans[index].getDegName()}',
+                          "Tap \"CREATE PLAN\" to generate a plan",
                           style: GoogleFonts.roboto(
                             fontWeight: FontWeight.w700,
                             fontStyle: FontStyle.normal,
@@ -136,28 +76,79 @@ class _MyPlansState extends State<MyPlans> {
                           ),
                         ),
                       ),
-                      trailing: IconButton(
-                        //when pressed, delete from list
-                        onPressed: () {
-                          setState(() {
-                            //print(plans[index]);
-                            //print("removed list");
-                            // implement removePlan in model
-                            model.removePlan(plans[index]);
-                            plans.removeAt(index);
-                            if (index < favoriteIndex) {
-                              favoriteIndex--;
-                            } else if (index == favoriteIndex) {
-                              favoriteIndex = -1;
-                            }
-                          });
-                        },
-                        icon: const Icon(Icons.close),
-                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: plansLength,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          color: Colors.transparent,
+                          child: ListTile(
+                            onTap: () {
+                              print(plans[index]);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewPlan(
+                                          model: model, plan: plans[index])));
+                            },
+                            leading: IconButton(
+                              color: Colors.black,
+                              onPressed: () {
+                                if (favoriteIndex == index) {
+                                  favoriteIndex = -1;
+                                  favoritePlan = '';
+                                  model.setFavePlan(-1);
+                                } else {
+                                  favoriteIndex = index;
+                                  favoritePlan = plans[index].getDegName();
+                                  model.setFavePlan(plans[index].getPlanID());
+                                }
+                                print('favorite plan: $favoritePlan');
+                                print('favorite index: $favoriteIndex');
+                                setState(() {});
+                              },
+                              icon: favoriteIndex == index
+                                  ? const Icon(Icons.star,
+                                      color: Colors.yellow, size: 30)
+                                  : const Icon(Icons.star_border,
+                                      //either make it gray, light gray, or white
+                                      color: Color(0xD9EEEEEE),
+                                      size: 30),
+                            ),
+                            title: Transform.translate(
+                              // adjust offset to change the icon to text spacing
+                              offset: const Offset(0, 0),
+                              child: Text(
+                                '${planSchool[index]} - ${plans[index].getDegName()}',
+                                style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                            trailing: IconButton(
+                              //when pressed, delete from list
+                              onPressed: () {
+                                setState(() {
+                                  //print(plans[index]);
+                                  //print("removed list");
+                                  // implement removePlan in model
+                                  model.removePlan(plans[index]);
+                                  plans.removeAt(index);
+                                  if (index < favoriteIndex) {
+                                    favoriteIndex--;
+                                  } else if (index == favoriteIndex) {
+                                    favoriteIndex = -1;
+                                  }
+                                });
+                              },
+                              icon: const Icon(Icons.close),
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
