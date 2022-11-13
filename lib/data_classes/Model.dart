@@ -307,6 +307,40 @@ class Model {
     return planSchoolNameList[0] as String;
   }
 
+  Future<List<String>> getReqs(Plan plan) async {
+    final List<Map<String, Object?>> reqObjects = await _db.rawQuery(
+        "SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
+    List<Object?> prefixList =
+    reqObjects.map((e) => e["course_prefix"]).toList();
+    List<Object?> numList = reqObjects.map((e) => e["course_num"]).toList();
+    List<Object?> categoryList = reqObjects.map((e) => e["category"]).toList();
+    List<Object?> catReqList = reqObjects.map((e) => e["cat_req"]).toList();
+    List<String> courseList = [];
+    for (int i = 0; i < numList.length; i++) {
+      String course = prefixList[i] as String;
+      course += "-";
+      course += numList[i] as String;
+      courseList.add(course);
+    }
+    HashMap<String, int> map = HashMap();
+    List<String> reqs = [];
+    for (int i = 0; i < numList.length; i++) {
+      if ((categoryList[i] as String).isEmpty) {
+        reqs.add(courseList[i]);
+      } else {
+        String category = categoryList[i] as String;
+        if (!map.containsKey(category)) {
+          map[category] = (catReqList[i] as int) - 1;
+          reqs.add(category);
+        } else if (map[category]! > 0) {
+          map[category] = (map[category]!) - 1;
+          reqs.add(category);
+        }
+      }
+    }
+    return reqs;
+  }
+
   Future<List<String>> getReqNeeded(Plan plan) async {
     //print("START OF getReqNeeded");
     final List<Map<String, Object?>> reqObjects = await _db.rawQuery(
