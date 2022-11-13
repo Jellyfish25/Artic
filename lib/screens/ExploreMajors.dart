@@ -81,9 +81,9 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                   selectedItems: selectedColleges,
                   hint: const Padding(
                     padding: EdgeInsets.all(12.0),
-                    child: Text("Select any"),
+                    child: Text("Select one or more colleges"),
                   ),
-                  searchHint: "Select any",
+                  searchHint: "Select one or more colleges",
                   onChanged: (value) {
                     setState(() {
                       selectedColleges = value;
@@ -111,7 +111,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Specify Major(s)',
+                    'Specify major(s) and/or search terms',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: Colors.black,
@@ -155,7 +155,7 @@ class _ExploreMajorsState extends State<ExploreMajors> {
                           ),
                           hintText: _controller.hasTags
                               ? ''
-                              : "Type a keyword and end it with a comma",
+                              : "Use commas to separate majors/keywords",
                           errorText: error,
                           prefixIconConstraints: BoxConstraints(
                               maxWidth: MediaQuery.of(context).size.width),
