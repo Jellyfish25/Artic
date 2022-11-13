@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../constants.dart';
 import '../data_classes/Model.dart';
 
@@ -45,7 +44,7 @@ class _PossibleMajorsState extends State<PossibleMajors> {
           Container(
               // adjust container width/height to fit box better
               width: 380,
-              height: 300,
+              height: 550,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: const Color(0xFFB0E8FA),
@@ -73,7 +72,20 @@ class _PossibleMajorsState extends State<PossibleMajors> {
                 ),
                 const SizedBox(height: 5),
                 Expanded(
-                  child: ListView.builder(
+                  child: possibleMajors.isEmpty ?
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    child: Text("Sorry, there were no relevant degrees for the "
+                        "colleges and majors/keywords you gave.\n\n"
+                        "Please try a new combination of colleges and majors"
+                        " or use more generalized majors/keywords.",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w700,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 20)),
+                  ) :
+                  ListView.builder(
                     itemCount: possibleMajors.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Transform.translate(

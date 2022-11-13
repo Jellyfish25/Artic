@@ -4,7 +4,6 @@ import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:textfield_tags/textfield_tags.dart';
-
 import 'PossibleMajors.dart';
 
 class ExploreMajors extends StatefulWidget {
