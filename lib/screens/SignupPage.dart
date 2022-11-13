@@ -30,6 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
   String email = '';
   String password = ''; // made these '' just to silence errors
   String confirmPassword = '';
+  bool emailAvailable = false;
 
   String SQ1 = '';
   String SQ2 = '';
@@ -83,13 +84,23 @@ class _SignupScreenState extends State<SignupScreen> {
                 TextField(
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.left,
-                  onChanged: (value) {
+                  onChanged: (value) async {
                     email = value;
+                    emailAvailable = await model.emailIsAvailable(email);
+                    setState(() {});
                   },
                   decoration: kTextFieldDecoration.copyWith(
-                      icon: const Icon(Icons.email),
-                      hintText: 'Example@Example.com',
-                      labelText: 'Email Address'),
+                    icon: const Icon(Icons.email),
+                    hintText: 'Example@Example.com',
+                    labelText: 'Email Address',
+                    errorText: email == ''
+                        ? null
+                        : !email.contains("@")
+                            ? "Error: Not a valid email"
+                            : !emailAvailable
+                                ? "Error: Email is not available"
+                                : null,
+                  ),
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -99,11 +110,17 @@ class _SignupScreenState extends State<SignupScreen> {
                   textAlign: TextAlign.left,
                   onChanged: (value) {
                     password = value;
+                    setState(() {});
                   },
                   decoration: kTextFieldDecoration.copyWith(
                       icon: const Icon(Icons.vpn_key),
                       hintText: 'Enter a Password',
-                      labelText: 'Password'),
+                      labelText: 'Password',
+                      errorText: password == ''
+                          ? null
+                          : password.length >= 5
+                              ? null
+                              : "Error: Password needs to contain 5 characters"),
                 ),
                 const SizedBox(
                   height: 10.0,
@@ -113,11 +130,19 @@ class _SignupScreenState extends State<SignupScreen> {
                   textAlign: TextAlign.left,
                   onChanged: (value) {
                     confirmPassword = value;
+                    setState(() {});
                   },
                   decoration: kTextFieldDecoration.copyWith(
                       icon: const Icon(Icons.vpn_key_outlined),
                       hintText: 'Confirm Password',
-                      labelText: 'Confirm Password'),
+                      labelText: 'Confirm Password',
+                      errorText: confirmPassword == ''
+                          ? null
+                          : password.length < 5
+                              ? null
+                              : confirmPassword == password
+                                  ? null
+                                  : "Error: Password does not match"),
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -126,7 +151,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: true,
                   textAlign: TextAlign.left,
                   onChanged: (value) {
-                   SQ1 = value;
+                    SQ1 = value;
                   },
                   decoration: kTextFieldDecoration.copyWith(
                       icon: const Icon(Icons.lock),
@@ -169,13 +194,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     color: const Color(0xFF1375CF),
                     onPressed: () async {
                       if (await model.emailIsAvailable(email) &&
-                          password == confirmPassword) {
+                          password == confirmPassword &&
+                          password.length >= 5) {
                         model.addUser(email, fullName, password);
                         model.setCurrentUser(email);
                         Navigator.pushNamed(context, Overview.id);
                       } else if (password != confirmPassword) {
                         print("Error: password does not match.\n");
                         //TODO: make error visible from UI
+                      } else if (password.length < 5) {
+                        print("Error: password length is not 5.\n");
                       } else {
                         print("Error: email is unavailable.\n");
                         //TODO: make error visible from UI
