@@ -143,6 +143,10 @@ class Model {
     _handler.insertUser(User(email, fullName, password, -1), _db);
   }
 
+  void removeUser(String email) {
+    _handler.deleteUser(email, _db);
+  }
+
   Future<bool> emailIsAvailable(String email) async {
     List<Map> emailList =
         await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
@@ -364,7 +368,7 @@ class Model {
     return reqMet;
   }
 
-  /// Explore Majors methods
+  /// Possible Majors methods
   Future<List<String>> getPossibleMajors(List<String> schoolIDs, List<String> keywords) async {
     print(schoolIDs);
     print(keywords);
