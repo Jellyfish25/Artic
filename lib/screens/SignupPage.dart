@@ -1,16 +1,12 @@
 import 'package:artic/components/rounded_button.dart';
 import 'package:artic/data_classes/Model.dart';
-import 'package:artic/data_classes/User.dart';
 import 'package:artic/screens/LoginScreen.dart';
 import 'package:artic/screens/Overview.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:sqflite/sqflite.dart';
-
 import '../constants.dart';
 import '../data_classes/DatabaseHandler.dart';
 import '../screens/LoginScreen.dart';
-import '../data_classes/DatabaseHandler.dart';
 
 class SignupScreen extends StatefulWidget {
   final Model model;

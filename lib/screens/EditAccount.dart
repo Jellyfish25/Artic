@@ -1,8 +1,6 @@
 import 'package:artic/components/rounded_button.dart';
 import 'package:artic/constants.dart';
 import 'package:flutter/material.dart';
-
-import '../screens/SignupPage.dart';
 import '../constants.dart';
 import 'Overview.dart';
 import 'package:artic/data_classes/Model.dart';
@@ -12,7 +10,6 @@ class EditAcc extends StatefulWidget {
   static const String id = 'EditAccount';
 
   const EditAcc({Key? key, required this.model}) : super(key: key);
-
 
   @override
  State <EditAcc> createState() => _EditAccState(model);
@@ -50,9 +47,7 @@ class _EditAccState extends State<EditAcc> {
         ],
       );
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +107,6 @@ class _EditAccState extends State<EditAcc> {
                 height: 30.0,
               ),
               TextField(
-
                 textAlign: TextAlign.left,
                 onChanged: (value2) {
                   new_password = value2;
@@ -151,15 +145,11 @@ class _EditAccState extends State<EditAcc> {
                       //TODO: check security question if successful update database
                     });
                     setState(() {});
-
                     try {
                       final user = email; // filler code until DB is set up
-
-
                       if (user != '') {
                         Navigator.pushNamed(context, Overview.id);
                       }
-
                       setState(() {});
                     } catch (e) {
                       print(e);

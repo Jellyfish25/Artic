@@ -1,14 +1,9 @@
-import 'dart:io';
-
 import 'package:artic/data_classes/Model.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import '../data_classes/Plan.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../constants.dart';
-
 
 class Overview extends StatefulWidget {
   final Model model;
@@ -50,23 +45,16 @@ class _OverviewState extends State<Overview> {
 
   Future<void> setData() async {
     isLoading = true;
-
     Plan favePlan = await model.getFavePlan();
-
     if(favePlan.planID != -1) {
       planDegName = favePlan.getDegName();
-
       List<String> reqMet = await model.getReqMet(favePlan);
       numReqMet = reqMet.length;
-
       List<String> reqNeeded = await model.getReqNeeded(favePlan);
       totalReq = numReqMet + reqNeeded.length;
-
       planSchool = await model.getPlanSchoolName(favePlan);
     }
-
     isLoading = false;
-
     setState(() {});
   }
 
@@ -90,8 +78,6 @@ class _OverviewState extends State<Overview> {
                 ),
               ),
               const SizedBox(height: 20),
-              //Image.asset('images/gradBar.png'),
-              //*********************** progress bar
               SizedBox(
                 height: 40,
                 width: 400,

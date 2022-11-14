@@ -1,7 +1,6 @@
 import 'package:artic/components/rounded_button.dart';
 import 'package:artic/constants.dart';
 import 'package:flutter/material.dart';
-
 import '../screens/SignupPage.dart';
 import 'Overview.dart';
 
@@ -12,7 +11,6 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPassword extends State<ForgotPassword> {
-  //final _auth = FirebaseAuth.instance;
   String email = ''; // made these '' just to silence errors
   String new_password = '';
   String new_password2 = '';
@@ -33,17 +31,13 @@ class _ForgotPassword extends State<ForgotPassword> {
             elevation: 5.0,
             child: const Text('Submit'),
             onPressed: (){
-
               Navigator.of(context).pop(security.text.toString());
-
             },
           )
         ],
       );
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -120,24 +114,22 @@ class _ForgotPassword extends State<ForgotPassword> {
                   title: 'Reset',
                   color: const Color(0xFF1375CF),
                   onPressed: () async {
-                    //TODO: first verify if email is in database select secuirty question/answer
+                    //TODO: first verify if email is in database select security question/answer
                     createAlertDialog(context).then((onValue){
                       res = onValue;
                       print(res);
                       //TODO: check security question if successful update database
                     });
                     setState(() {});
-
                     try {
                       final user = email; // filler code until DB is set up
                       /*
-                    final user = await _auth.signInWithEmailAndPassword(
+                        final user = await _auth.signInWithEmailAndPassword(
                         email: email, password: password);
                      */
                       if (user != '') {
                         Navigator.pushNamed(context, Overview.id);
                       }
-
                       setState(() {});
                     } catch (e) {
                       print(e);

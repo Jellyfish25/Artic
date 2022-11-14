@@ -149,11 +149,10 @@ class _CreatePlanState extends State<CreatePlan> {
               SearchChoices.single(
                 value: degreeName,
                 items: degrees,
-                //selectedItems: selectedColleges,
                 hint: Text("Degree Name"),
                 onChanged: (value) {
                   setState(() {
-                    degreeName = value; //?
+                    degreeName = value;
                   });
                 },
                 isExpanded: true,

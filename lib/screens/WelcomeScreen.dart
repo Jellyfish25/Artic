@@ -1,4 +1,3 @@
-import 'package:artic/screens/Overview.dart';
 import 'package:artic/screens/SignupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

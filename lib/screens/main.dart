@@ -1,10 +1,7 @@
 import 'package:artic/data_classes/Model.dart';
-import 'package:artic/screens/CompareDegree.dart';
 import 'package:artic/screens/SignupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../screens/ComparisonScreen.dart';
 import '../screens/CourseHistory.dart';
 import '../screens/CreatePlan.dart';
 import '../screens/ForgotPassword.dart';
@@ -34,15 +31,11 @@ class Artic extends StatelessWidget {
         SignupScreen.id: (context) => SignupScreen(model: model),
         Overview.id: (context) => Overview(model: model),
         MyPlans.id: (context) => MyPlans(model: model),
-        //CompareDegree.id: (context) => CompareDegree(model: model),
-        //ComparisonScreen.id: (context) => ComparisonScreen(model),
         CourseHistory.id: (context) => CourseHistory(model: model),
         CreatePlan.id: (context) => CreatePlan(model: model),
         EditAcc.id: (context) => EditAcc(model: model),
         HowDoIUseThisApp.id: (context) => const HowDoIUseThisApp(),
       },
-
-      //home: HomePage(),
     );
   }
 }

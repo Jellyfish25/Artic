@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:search_choices/search_choices.dart';
-
 import '../constants.dart';
 
 class CourseHistory extends StatefulWidget {

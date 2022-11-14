@@ -33,10 +33,8 @@ class _MyPlansState extends State<MyPlans> {
       print("Plan: ${p.toString()}");
       planSchool.add(await model.getPlanSchoolName(p));
     }
-
     favoriteIndex = await model.getFavePlanIndex();
     print("FAVE INDEX: $favoriteIndex");
-
     setState(() {});
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../data_classes/Plan.dart';
 import '../constants.dart';
@@ -12,7 +11,6 @@ class CompareDegree extends StatefulWidget {
 
   @override
   State<CompareDegree> createState() => _CompareDegreeState(model);
-  //static const String id = 'CompareDegree';
 }
 
 class _CompareDegreeState extends State<CompareDegree> {
@@ -88,7 +86,6 @@ class _CompareDegreeState extends State<CompareDegree> {
                                   if (count != 2) {
                                     setState(() {
                                       _selectedItems.add(index);
-                                      //indexes.add(index);
                                       count++;
                                     });
                                   }
@@ -96,14 +93,12 @@ class _CompareDegreeState extends State<CompareDegree> {
                                   setState(() {
                                     _selectedItems
                                         .removeWhere((val) => val == index);
-                                    //indexes.removeWhere((val) => val == index);
                                     count--;
                                   });
                                 }
                               },
                               onLongPress: () {
                                 print('Selected Item index at: $indexes');
-                                //idk what we want this to do yet
                               },
                               title: Align(
                                 alignment: Alignment.center,
