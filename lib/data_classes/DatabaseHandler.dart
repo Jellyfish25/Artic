@@ -6,11 +6,13 @@ import 'package:artic/data_classes/User.dart';
 class DatabaseHandler {
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
+    print(path);
     return openDatabase(
       join(path, 'artic2.db'),
       version: 1,
     );
   }
+
   /// User methods
   //insert a user to the database
   Future<int> insertUser(User user, Database db) async {
@@ -28,5 +30,6 @@ class DatabaseHandler {
       whereArgs: [email],
     );
   }
+
   /// End of User Methods
 }

@@ -8,16 +8,63 @@
 import 'package:artic/data_classes/DatabaseHandler.dart';
 import 'package:artic/data_classes/Model.dart';
 import 'package:artic/data_classes/User.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<void> main() async {
-  DatabaseHandler handler = DatabaseHandler();
-  Database db = await handler.initializeDB();
-  handler.insertUser(User("email1@email.com", "user1", "password1", -1), db);
-  handler.insertUser(User("email2@email.com", "user2", "password2", -1), db);
-  handler.insertUser(User("email3@email.com", "user3", "password3", -1), db);
-  Model model = Model();
+/*
+To begin testing:
+1. Start android emulator
+2. Type the following command in terminal: run test/model_test.dart
+3. Helpful commands while running:
+    shift + R: to to reload tests
+    c: clear terminal
+    q: to quit
+ */
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // DatabaseHandler handler = DatabaseHandler();
+  // Database db = await handler.initializeDB();
+  // handler.insertUser(User("email1@email.com", "user1", "password1", -1), db);
+  // handler.insertUser(User("email2@email.com", "user2", "password2", -1), db);
+  // handler.insertUser(User("email3@email.com", "user3", "password3", -1), db);
+  // Model model = Model();
+
+  // variables need to be late (to be initialized then used later on)
+  late DatabaseHandler handler;
+  late Database db; //note, only thing that sends out error (non breaking)
+  late Model model;
+
+  // setUpAll() is a function that runs once before all the tests run. You can think of it as the initState() method.
+  setUpAll() async {
+    handler = DatabaseHandler();
+    db = await handler.initializeDB();
+    handler.deleteUser("email1@email.com", db);
+    handler.deleteUser("email2@email.com", db);
+    handler.deleteUser("email3@email.com", db);
+    handler.insertUser(User("email1@email.com", "user1", "password1", -1), db);
+    handler.insertUser(User("email2@email.com", "user2", "password2", -1), db);
+    handler.insertUser(User("email3@email.com", "user3", "password3", -1), db);
+
+    model = Model();
+    // print("VERIFYING IF USER IS ENTERED IN DB: \n");
+    // List<Map> emailList = await db
+    //     .rawQuery("SELECT * FROM user WHERE email = 'email1@email.com'");
+    // print(emailList);
+    // print(await model.userIsValid("email1@email.com", "password1"));
+    // print("******* END TEST ******\n");
+  }
+
+  setUpAll();
+
+  // EXAMPLE OF TEST CASE:
+  /*
+      test('value should be incremented', () {
+      final counter = Counter();
+      counter.increment();
+      expect(counter.value, 1);
+    });
+   */
   group('getCourseHistory tests', () {
     test('', () {});
     test('', () {});
@@ -39,7 +86,9 @@ Future<void> main() async {
     test('', () {});
   });
   group('userIsValid tests', () {
-    test('', () {});
+    test('Test valid user input', () async {
+      expect(await model.userIsValid("email3@email.com", "password3"), true);
+    });
     test('', () {});
     test('', () {});
   });

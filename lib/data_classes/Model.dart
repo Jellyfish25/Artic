@@ -103,7 +103,8 @@ class Model {
         "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
   }
 
-  Future<void> addCourseToHist(String courseSchoolID, String selectedCourse) async {
+  Future<void> addCourseToHist(
+      String courseSchoolID, String selectedCourse) async {
     print("BEFORE ADD CH: ");
     print(await _db.rawQuery(
         "SELECT * FROM has_taken WHERE email = '${_currentUser.getEmail()}'"));
@@ -170,7 +171,8 @@ class Model {
     return colleges;
   }
 
-  Future<List<DropdownMenuItem<String>>> getSchoolDegrees(String schoolID) async {
+  Future<List<DropdownMenuItem<String>>> getSchoolDegrees(
+      String schoolID) async {
     print("starting getSchoolDegrees()\n");
     List<Map<String, Object?>> schoolDegreeList = await _db.rawQuery(
         "SELECT deg_name FROM degree JOIN school ON degree.school_id=school.school_id WHERE degree.school_id = '$schoolID'");
@@ -269,7 +271,7 @@ class Model {
     final List<Map<String, Object?>> reqObjects = await _db.rawQuery(
         "SELECT * FROM requires WHERE school_id = '${plan.getSchoolID()}' AND deg_name = '${plan.getDegName()}'");
     List<Object?> prefixList =
-    reqObjects.map((e) => e["course_prefix"]).toList();
+        reqObjects.map((e) => e["course_prefix"]).toList();
     List<Object?> numList = reqObjects.map((e) => e["course_num"]).toList();
     List<Object?> categoryList = reqObjects.map((e) => e["category"]).toList();
     List<Object?> catReqList = reqObjects.map((e) => e["cat_req"]).toList();
@@ -369,7 +371,8 @@ class Model {
   }
 
   /// Possible Majors methods
-  Future<List<String>> getPossibleMajors(List<String> schoolIDs, List<String> keywords) async {
+  Future<List<String>> getPossibleMajors(
+      List<String> schoolIDs, List<String> keywords) async {
     print(schoolIDs);
     print(keywords);
     List<String> majors = [];
