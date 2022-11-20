@@ -8,6 +8,7 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import '../data_classes/Plan.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../constants.dart';
+import '../data_classes/User.dart';
 
 class Overview extends StatefulWidget {
   final Model model;
@@ -80,13 +81,14 @@ class _OverviewState extends State<Overview> {
             children: [
               const SizedBox(height: 20),
               Text(
-                'You\'re This Close to Graduating!',
+                'Hi ${model.getUserName()}, You\'re This Close to Graduating!',
                 style: GoogleFonts.roboto(
-                  height: 0.7,
+                  height: 1.0,
                   fontWeight: FontWeight.w400,
                   fontStyle: FontStyle.normal,
-                  fontSize: 24,
+                  fontSize: 20,
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               //Image.asset('images/gradBar.png'),
