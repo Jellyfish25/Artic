@@ -13,7 +13,7 @@ class Model {
 
   Model() {
     _currentUser =
-        User("default email", "default fullName", "default password", -1);
+        User("default email", "default fullName", "default password", -1, "default secAnswer");
     _handler = DatabaseHandler();
     setDB();
   }
@@ -137,6 +137,17 @@ class Model {
     return _currentUser.getFullName();
   }
 
+  bool checkSecurityAnswer(String securityAnswer) {
+    return _currentUser.getSecurityAnswer() == securityAnswer;
+  }
+
+  Future<bool> checkForgotSecurityAnswer(String email, String securityAnswer) async {
+    List<Map<String, Object?>> answerMap = await _db.rawQuery("SELECT security_answer FROM user WHERE email=\'$email\'");
+    List<Object?> answerList = answerMap.map((e) => e["security_answer"]).toList();
+    String answer = answerList[0] as String;
+    return answer == securityAnswer;
+  }
+
   Future<void> setCurrentUser(String email) async {
     List<Map<String, Object?>> emailList =
         await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
@@ -144,12 +155,19 @@ class Model {
     print(_currentUser.toString());
   }
 
-  void addUser(String email, String fullName, String password) {
-    _handler.insertUser(User(email, fullName, password, -1), _db);
+  void addUser(String email, String fullName, String password, String securityAnswer) {
+    _handler.insertUser(User(email, fullName, password, -1, securityAnswer), _db);
   }
 
   void removeUser(String email) {
     _handler.deleteUser(email, _db);
+  }
+
+  Future<void> updateUserPassword(String email, String newPassword) async {
+    await _db.rawQuery("UPDATE user SET password=\'$newPassword\' WHERE email=\'$email\'");
+    print("FULL NAME CHECK: ${await _db.rawQuery(
+        "SELECT * FROM user WHERE email = \'$email\'")}");
+    _currentUser.setPassword(newPassword);
   }
 
   Future<bool> emailIsAvailable(String email) async {

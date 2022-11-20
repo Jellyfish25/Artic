@@ -3,26 +3,33 @@ import 'package:artic/constants.dart';
 import 'package:flutter/material.dart';
 import '../screens/SignupPage.dart';
 import 'Overview.dart';
+import '../data_classes/Model.dart';
 
 class ForgotPassword extends StatefulWidget {
   static const String id = 'forgot_password';
+  final Model model;
+
+  const ForgotPassword({Key? key, required this.model}) : super(key: key);
+
   @override
-  _ForgotPassword createState() => _ForgotPassword();
+  State<ForgotPassword> createState() => _ForgotPassword(model);
 }
 
 class _ForgotPassword extends State<ForgotPassword> {
+  Model model;
   String email = ''; // made these '' just to silence errors
-  String new_password = '';
-  String new_password2 = '';
-  String security_question = 'placeholder';
+  String newPassword = '';
+  String newPassword2 = '';
+  String securityQuestion = 'What is your favorite trumpet?';
   String res = '';
+  _ForgotPassword(this.model);
 
   Future createAlertDialog(BuildContext context){
     TextEditingController security = TextEditingController();
 
     return showDialog(context: context,builder: (context){
       return AlertDialog(
-        title: Text(security_question),
+        title: Text(securityQuestion),
         content: TextField(
           controller: security,
         ),
@@ -81,28 +88,44 @@ class _ForgotPassword extends State<ForgotPassword> {
                 height: 30.0,
               ),
               TextField(
-
+                obscureText: true,
                 textAlign: TextAlign.left,
                 onChanged: (value2) {
-                  new_password = value2;
+                  newPassword = value2;
+                  setState(() {});
                 },
                 decoration: kTextFieldDecoration.copyWith(
                     icon: const Icon(Icons.vpn_key),
                     hintText: 'Enter New Password',
-                    labelText: 'Password'),
+                    labelText: 'Password',
+                    errorText: newPassword == ''
+                        ? null
+                        : newPassword.length >= 5
+                        ? null
+                        : "Error: Password needs to contain 5 characters"
+                ),
               ),
               const SizedBox(
                 height: 20.0,
               ),
               TextField(
+                obscureText: true,
                 textAlign: TextAlign.left,
                 onChanged: (value3) {
-                  new_password2 = value3;
+                  newPassword2 = value3;
+                  setState(() {});
                 },
                 decoration: kTextFieldDecoration.copyWith(
                     icon: const Icon(Icons.vpn_key_outlined),
                     hintText: 'Re-enter Password',
-                    labelText: 'ConfirmPassword'),
+                    labelText: 'ConfirmPassword',
+                    errorText: newPassword2 == ''
+                        ? null
+                        : newPassword.length < 5
+                        ? null
+                        : newPassword2 == newPassword
+                        ? null
+                        : "Error: Password does not match"),
               ),
               const SizedBox(
                 height: 10.0,
@@ -115,25 +138,25 @@ class _ForgotPassword extends State<ForgotPassword> {
                   color: const Color(0xFF1375CF),
                   onPressed: () async {
                     //TODO: first verify if email is in database select security question/answer
-                    createAlertDialog(context).then((onValue){
-                      res = onValue;
-                      print(res);
-                      //TODO: check security question if successful update database
-                    });
-                    setState(() {});
-                    try {
-                      final user = email; // filler code until DB is set up
-                      /*
-                        final user = await _auth.signInWithEmailAndPassword(
-                        email: email, password: password);
-                     */
-                      if (user != '') {
-                        Navigator.pushNamed(context, Overview.id);
+                    if(!(await model.emailIsAvailable(email))) {
+                      model.setCurrentUser(email);
+                      if((newPassword == newPassword2) && (newPassword2 != '')) {
+                        createAlertDialog(context).then((onValue) {
+                          res = onValue;
+                          if((model.checkSecurityAnswer(res))) {
+                            model.updateUserPassword(email, newPassword2);
+                            print(model.getCurrentUser());
+                            Navigator.pushNamed(context, Overview.id);
+                          }
+                          else {
+                            showAlertDialog(context);
+                          }
+                          //TODO: check security question if successful update database
+                        });
                       }
-                      setState(() {});
-                    } catch (e) {
-                      print(e);
                     }
+
+                    setState(() {});
                   },
                   height: 50.0,
                   width: 250.0),
@@ -161,4 +184,31 @@ class _ForgotPassword extends State<ForgotPassword> {
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: const Text("Error"),
+    content: const Text("Either the email is invalid or your answer is not correct"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

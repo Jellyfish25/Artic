@@ -7,9 +7,10 @@ class User {
   String fullName;
   String password;
   int favePlan;
+  String securityAnswer;
 
   /// Constructs a User.
-  User(this.email, this.fullName, this.password, this.favePlan);
+  User(this.email, this.fullName, this.password, this.favePlan, this.securityAnswer);
 
   /// Gets a User's email.
   String getEmail() {
@@ -30,6 +31,9 @@ class User {
     return favePlan;
   }
 
+  String getSecurityAnswer() {
+    return securityAnswer;
+  }
   /// Updates a User's email.
   void setEmail(String newEmail) {
     email = newEmail;
@@ -49,18 +53,23 @@ class User {
     favePlan = newFavePlan;
   }
 
+  void setSecurityAnswer(String newSecurityAnswer) {
+    securityAnswer = newSecurityAnswer;
+  }
+
   User.fromMap(Map<String, dynamic> res)
       : email = res["email"],
         fullName = res["full_name"],
         password = res["password"],
-        favePlan = res["fave_plan"];
+        favePlan = res["fave_plan"],
+        securityAnswer = res["security_answer"];
 
   Map<String, Object?> toMap() {
-    return {'email': email, 'full_name': fullName, 'password': password, 'fave_plan': favePlan};
+    return {'email': email, 'full_name': fullName, 'password': password, 'fave_plan': favePlan, 'security_answer': securityAnswer};
   }
 
   @override
   String toString() {
-    return 'User{email: $email, full_name: $fullName, password: $password, fave_plan: $favePlan}';
+    return 'User{email: $email, full_name: $fullName, password: $password, fave_plan: $favePlan, security_answer: $securityAnswer}';
   }
 }

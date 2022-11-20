@@ -29,28 +29,24 @@ class HowDoIUseThisApp extends StatelessWidget {
     'ARTIC is aimed at letting college students know exactly how many more '
         'courses they must take to achieve a particular degree at a particular school.',
 
-    'There aren’t just general plans, but are specially tailored to each student! So to'
-        ' get the most out of ARTIC, start by entering the courses you’ve completed into'
-        ' your Course History. That way, any course requirements you’ve already satisfied'
+    'To get the most out of ARTIC, start by entering the courses you’ve completed into'
+        ' your Course History.\n\nThat way, any course requirements you’ve already satisfied'
         ' for a degree will be removed from the list.',
 
-    'But what if you’re a community college student looking to see how your courses will'
-        ' count towards a degree at a 4-year university? No problem, because ARTIC'
-        ' automatically translates your community college courses into their equivalent'
+    'ARTIC automatically translates your community college courses into their equivalent'
         ' university courses based on publicly-available articulation information.',
 
     'Select the college you’re currently enrolled in, the college you want to get the'
-        ' degree from, and the degree you want to get. When your Plan is generated,'
+        ' degree from, and the degree you want to get.\n\nWhen your Plan is generated,'
         ' you’ll see what required courses you’ve already done and a list of remaining'
-        ' courses to finish the degree. Remember this also works if you’re coming from'
-        ' a different school!',
+        ' courses to finish the degree.',
 
     'You can return to Plans you’ve created at any time. Select the star to favorite'
         ' a Plan and track your progress on the Overview page.',
 
     'Use the Compare Plans feature to get a closer look at two plans to see their'
-        ' differences. This will give you any courses that may be required by both'
-        ' degrees, as well as the total list of remaining courses for each one after'
+        ' differences.\n\nThis will give you course requirements for both'
+        ' degrees and the remaining courses for each one after'
         ' applying your Course History.',
 
     'If you’re unsure of what degrees are out there, use Explore Majors to search'

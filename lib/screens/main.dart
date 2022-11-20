@@ -26,7 +26,7 @@ class Artic extends StatelessWidget {
       initialRoute: WelcomeScreen.id,
       routes: {
         WelcomeScreen.id: (context) => const WelcomeScreen(),
-        ForgotPassword.id: (context) => ForgotPassword(),
+        ForgotPassword.id: (context) => ForgotPassword(model: model),
         LoginScreen.id: (context) => LoginScreen(model: model),
         SignupScreen.id: (context) => SignupScreen(model: model),
         Overview.id: (context) => Overview(model: model),

@@ -174,7 +174,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      'Just ${plan1.degName} Courses',
+                      '${plan1.degName} Courses',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w700,
                         fontStyle: FontStyle.normal,
@@ -257,7 +257,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      'Just ${plan2.degName} Courses',
+                      '${plan2.degName} Courses',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w700,
                         fontStyle: FontStyle.normal,

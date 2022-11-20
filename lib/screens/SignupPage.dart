@@ -26,11 +26,8 @@ class _SignupScreenState extends State<SignupScreen> {
   String email = '';
   String password = ''; // made these '' just to silence errors
   String confirmPassword = '';
+  String securityAnswer = '';
   bool emailAvailable = false;
-
-  String SQ1 = '';
-  String SQ2 = '';
-  String SQ3 = '';
 
   _SignupScreenState(this.model);
 
@@ -147,40 +144,12 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: true,
                   textAlign: TextAlign.left,
                   onChanged: (value) {
-                    SQ1 = value;
+                    securityAnswer = value;
                   },
                   decoration: kTextFieldDecoration.copyWith(
                       icon: const Icon(Icons.lock),
-                      hintText: 'Favorite trumpet',
-                      labelText: 'Security Question 1'),
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  onChanged: (value) {
-                    SQ2 = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                      icon: const Icon(Icons.lock),
-                      hintText: 'Favorite color',
-                      labelText: 'Security Question 2'),
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.left,
-                  onChanged: (value) {
-                    SQ3 = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                      icon: const Icon(Icons.lock),
-                      hintText: 'Favorite oxymoron',
-                      labelText: 'Security Question 3'),
+                      hintText: 'Favorite trumpet?',
+                      labelText: 'Security Question'),
                 ),
                 const SizedBox(
                   height: 12.0,
@@ -192,7 +161,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       if (await model.emailIsAvailable(email) &&
                           password == confirmPassword &&
                           password.length >= 5) {
-                        model.addUser(email, fullName, password);
+                        model.addUser(email, fullName, password, securityAnswer);
                         model.setCurrentUser(email);
                         Navigator.pushNamed(context, Overview.id);
                       } else if (password != confirmPassword) {
