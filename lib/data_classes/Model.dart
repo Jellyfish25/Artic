@@ -133,6 +133,10 @@ class Model {
     return _currentUser.getEmail();
   }
 
+  String getUserName() {
+    return _currentUser.getFullName();
+  }
+
   Future<void> setCurrentUser(String email) async {
     List<Map<String, Object?>> emailList =
         await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
