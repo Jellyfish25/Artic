@@ -58,6 +58,8 @@ void main() async {
       expect(counter.value, 1);
     });
    */
+
+  // if model needs to be updated, do it inside group (not inside test)
   group('getCourseHistory tests', () {
     test('', () {});
     test('', () {});
@@ -69,24 +71,56 @@ void main() async {
     test('', () {});
   });
   group('userIsValid tests', () {
-    test('Test valid user input', () async {
-      // print("********* CURRENT USER: ${model.getCurrentUser()}");
+    test(
+        'User with a registered email and its associated password should be valid.',
+        () async {
       await setUpAll();
-      // print("********* CURRENT USER: ${model.getCurrentUser()}");
-      expect(await model.userIsValid("email3@email.com", "password3"), true);
+      expect(await model.userIsValid("email1@email.com", "password1"), true);
     });
-    test('', () {});
-    test('', () {});
+    test(
+        'User with a registered email but the wrong password should not be valid.',
+        () async {
+      await setUpAll();
+      expect(await model.userIsValid("email3@email.com", "password3!"), false);
+    });
+    test(
+        'User without a registered email but with a password associated with a registered email should not be valid.',
+        () async {
+      await setUpAll();
+      expect(await model.userIsValid("email3@email.com!", "password3"), false);
+    });
+    test(
+        'User without a registered email or a correct password should not be valid.',
+        () async {
+      await setUpAll();
+      expect(await model.userIsValid("email3@email.com!", "password3!"), false);
+    });
   });
   group('checkSecurityAnswer tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
+    model.setCurrentUser("email1@email.com");
+    test(
+        'A securityAnswer that equals the current user\'s security answer should pass.',
+        () async {
+      await setUpAll();
+      // print("CURRENT USER **********: ${model.getCurrentUser()}");
+      expect(model.checkSecurityAnswer("trumpet1"), true);
+    });
+    test(
+        'A securityAnswer that DNE the current user\'s security answer shouldn\'t pass.',
+        () async {
+      await setUpAll();
+      expect(model.checkSecurityAnswer("trumpet2"), false);
+    });
   });
   group('emailIsAvailable tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
+    test('An email not already in the database should be available', () async {
+      await setUpAll();
+      expect(await model.emailIsAvailable("email4@email.com"), true);
+    });
+    test('An email already in the database should not be available.', () async {
+      await setUpAll();
+      expect(await model.emailIsAvailable("email1@email.com"), false);
+    });
   });
   group('getPlans tests', () {
     test('', () {});
