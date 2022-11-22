@@ -42,9 +42,9 @@ void main() async {
     handler.deleteUser("email1@email.com", db);
     handler.deleteUser("email2@email.com", db);
     handler.deleteUser("email3@email.com", db);
-    handler.insertUser(User("email1@email.com", "user1", "password1", -1), db);
-    handler.insertUser(User("email2@email.com", "user2", "password2", -1), db);
-    handler.insertUser(User("email3@email.com", "user3", "password3", -1), db);
+    handler.insertUser(User("email1@email.com", "user1", "password1", -1, "trumpet1"), db);
+    handler.insertUser(User("email2@email.com", "user2", "password2", -1, "trumpet2"), db);
+    handler.insertUser(User("email3@email.com", "user3", "password3", -1, "trumpet3"), db);
 
     model = Model();
     // print("VERIFYING IF USER IS ENTERED IN DB: \n");
@@ -75,16 +75,6 @@ void main() async {
     test('', () {});
     test('', () {});
   });
-  group('removeCourseFromHist tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('addCourseToHist tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
   group('userIsValid tests', () {
     test('Test valid user input', () async {
       expect(await model.userIsValid("email3@email.com", "password3"), true);
@@ -92,22 +82,7 @@ void main() async {
     test('', () {});
     test('', () {});
   });
-  group('getCurrentUser tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('setCurrentUser tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('addUser tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('removeUser tests', () {
+  group('checkSecurityAnswer tests', () {
     test('', () {});
     test('', () {});
     test('', () {});
@@ -117,37 +92,7 @@ void main() async {
     test('', () {});
     test('', () {});
   });
-  group('getSchoolNames tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('getSchoolDegrees tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('getCourses tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
   group('getPlans tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('addPlan tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('removePlan tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('setFavePlan tests', () {
     test('', () {});
     test('', () {});
     test('', () {});

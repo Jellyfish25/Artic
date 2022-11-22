@@ -141,13 +141,6 @@ class Model {
     return _currentUser.getSecurityAnswer() == securityAnswer;
   }
 
-  Future<bool> checkForgotSecurityAnswer(String email, String securityAnswer) async {
-    List<Map<String, Object?>> answerMap = await _db.rawQuery("SELECT security_answer FROM user WHERE email=\'$email\'");
-    List<Object?> answerList = answerMap.map((e) => e["security_answer"]).toList();
-    String answer = answerList[0] as String;
-    return answer == securityAnswer;
-  }
-
   Future<void> setCurrentUser(String email) async {
     List<Map<String, Object?>> emailList =
         await _db.rawQuery("SELECT * FROM user WHERE email = '$email'");
@@ -157,10 +150,6 @@ class Model {
 
   void addUser(String email, String fullName, String password, String securityAnswer) {
     _handler.insertUser(User(email, fullName, password, -1, securityAnswer), _db);
-  }
-
-  void removeUser(String email) {
-    _handler.deleteUser(email, _db);
   }
 
   Future<void> updateUserPassword(String email, String newPassword) async {
