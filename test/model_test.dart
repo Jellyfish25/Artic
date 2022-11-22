@@ -31,31 +31,24 @@ void main() async {
   // Model model = Model();
 
   // variables need to be late (to be initialized then used later on)
-  late DatabaseHandler handler;
-  late Database db; //note, only thing that sends out error (non breaking)
-  late Model model;
+  DatabaseHandler handler = DatabaseHandler();
+  Model model = Model();
+  Database db = await handler.initializeDB();
 
   // setUpAll() is a function that runs once before all the tests run. You can think of it as the initState() method.
   setUpAll() async {
-    handler = DatabaseHandler();
-    db = await handler.initializeDB();
-    handler.deleteUser("email1@email.com", db);
-    handler.deleteUser("email2@email.com", db);
-    handler.deleteUser("email3@email.com", db);
-    handler.insertUser(User("email1@email.com", "user1", "password1", -1, "trumpet1"), db);
-    handler.insertUser(User("email2@email.com", "user2", "password2", -1, "trumpet2"), db);
-    handler.insertUser(User("email3@email.com", "user3", "password3", -1, "trumpet3"), db);
-
-    model = Model();
-    // print("VERIFYING IF USER IS ENTERED IN DB: \n");
-    // List<Map> emailList = await db
-    //     .rawQuery("SELECT * FROM user WHERE email = 'email1@email.com'");
-    // print(emailList);
-    // print(await model.userIsValid("email1@email.com", "password1"));
-    // print("******* END TEST ******\n");
+    await handler.deleteUser("email1@email.com", db);
+    await handler.deleteUser("email2@email.com", db);
+    await handler.deleteUser("email3@email.com", db);
+    await handler.insertUser(
+        User("email1@email.com", "user1", "password1", -1, "trumpet1"), db);
+    await handler.insertUser(
+        User("email2@email.com", "user2", "password2", -1, "trumpet2"), db);
+    await handler.insertUser(
+        User("email3@email.com", "user3", "password3", -1, "trumpet3"), db);
   }
 
-  setUpAll();
+  //await setUpAll();
 
   // EXAMPLE OF TEST CASE:
   /*
@@ -77,6 +70,9 @@ void main() async {
   });
   group('userIsValid tests', () {
     test('Test valid user input', () async {
+      // print("********* CURRENT USER: ${model.getCurrentUser()}");
+      await setUpAll();
+      // print("********* CURRENT USER: ${model.getCurrentUser()}");
       expect(await model.userIsValid("email3@email.com", "password3"), true);
     });
     test('', () {});
