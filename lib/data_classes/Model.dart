@@ -12,8 +12,8 @@ class Model {
   late DatabaseHandler _handler;
 
   Model() {
-    _currentUser =
-        User("default email", "default fullName", "default password", -1, "default secAnswer");
+    _currentUser = User("default email", "default fullName", "default password",
+        -1, "default secAnswer");
     _handler = DatabaseHandler();
     setDB();
   }
@@ -148,14 +148,17 @@ class Model {
     print(_currentUser.toString());
   }
 
-  void addUser(String email, String fullName, String password, String securityAnswer) {
-    _handler.insertUser(User(email, fullName, password, -1, securityAnswer), _db);
+  void addUser(
+      String email, String fullName, String password, String securityAnswer) {
+    _handler.insertUser(
+        User(email, fullName, password, -1, securityAnswer), _db);
   }
 
   Future<void> updateUserPassword(String email, String newPassword) async {
-    await _db.rawQuery("UPDATE user SET password=\'$newPassword\' WHERE email=\'$email\'");
-    print("FULL NAME CHECK: ${await _db.rawQuery(
-        "SELECT * FROM user WHERE email = \'$email\'")}");
+    await _db.rawQuery(
+        "UPDATE user SET password=\'$newPassword\' WHERE email=\'$email\'");
+    print(
+        "FULL NAME CHECK: ${await _db.rawQuery("SELECT * FROM user WHERE email = \'$email\'")}");
     _currentUser.setPassword(newPassword);
   }
 
@@ -244,6 +247,12 @@ class Model {
     print("AFTER removePlan\n");
     print(await _db.rawQuery(
         "SELECT * FROM plan WHERE owner = '${_currentUser.getEmail()}'"));
+  }
+
+  Future<void> removeAllPlans() async {
+    await _db.rawQuery("DELETE FROM plan");
+    print("*********AFTER REMOVING ALL PLANS:\n");
+    print(await _db.rawQuery("SELECT * FROM plan"));
   }
 
   Future<void> setFavePlan(int planID) async {

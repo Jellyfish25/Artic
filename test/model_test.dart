@@ -7,15 +7,17 @@
 
 import 'package:artic/data_classes/DatabaseHandler.dart';
 import 'package:artic/data_classes/Model.dart';
+import 'package:artic/data_classes/Plan.dart';
 import 'package:artic/data_classes/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:collection/collection.dart';
 
 /*
 To begin testing:
 1. Start android emulator
-2. Type the following command in terminal: run test/model_test.dart
+2. Type the following command in terminal: flutter run test/model_test.dart
 3. Helpful commands while running:
     shift + R: to to reload tests
     c: clear terminal
@@ -34,7 +36,7 @@ void main() async {
   DatabaseHandler handler = DatabaseHandler();
   Model model = Model();
   Database db = await handler.initializeDB();
-
+  DateTime today = DateTime.now();
   // setUpAll() is a function that runs once before all the tests run. You can think of it as the initState() method.
   setUpAll() async {
     await handler.deleteUser("email1@email.com", db);
@@ -46,6 +48,7 @@ void main() async {
         User("email2@email.com", "user2", "password2", -1, "trumpet2"), db);
     await handler.insertUser(
         User("email3@email.com", "user3", "password3", -1, "trumpet3"), db);
+    await model.removeAllPlans();
   }
 
   //await setUpAll();
@@ -102,7 +105,6 @@ void main() async {
         'A securityAnswer that equals the current user\'s security answer should pass.',
         () async {
       await setUpAll();
-      // print("CURRENT USER **********: ${model.getCurrentUser()}");
       expect(model.checkSecurityAnswer("trumpet1"), true);
     });
     test(
@@ -123,24 +125,103 @@ void main() async {
     });
   });
   group('getPlans tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
+    model.setCurrentUser("email1@email.com");
+    test('Testing without any plans saved.', () async {
+      List<Plan> plans = await model.getPlans();
+      expect(plans, []);
+    });
+    test('Testing with three existing plans.', () async {
+      Plan plan1 = Plan(1, "${today.year}-${today.month}-${today.day}",
+          "email1@email.com", "school", "deg1");
+      Plan plan2 = Plan(2, "${today.year}-${today.month}-${today.day}",
+          "email1@email.com", "school", "deg2");
+      Plan plan3 = Plan(3, "${today.year}-${today.month}-${today.day}",
+          "email1@email.com", "school", "deg3");
+      List<Plan> expectedPlans = <Plan>[];
+      expectedPlans.add(plan1);
+      expectedPlans.add(plan2);
+      expectedPlans.add(plan3);
+
+      await model.addPlan(plan1);
+      await model.addPlan(plan2);
+      await model.addPlan(plan3);
+      List<Plan> plans = await model.getPlans();
+      await model.removeAllPlans();
+
+      expect(plans[0].planID, expectedPlans[0].planID);
+      expect(plans[0].dateCreated, expectedPlans[0].dateCreated);
+      expect(plans[0].owner, expectedPlans[0].owner);
+      expect(plans[0].schoolID, expectedPlans[0].schoolID);
+      expect(plans[0].degName, expectedPlans[0].degName);
+
+      expect(plans[1].planID, expectedPlans[1].planID);
+      expect(plans[1].dateCreated, expectedPlans[1].dateCreated);
+      expect(plans[1].owner, expectedPlans[1].owner);
+      expect(plans[1].schoolID, expectedPlans[1].schoolID);
+      expect(plans[1].degName, expectedPlans[1].degName);
+
+      expect(plans[2].planID, expectedPlans[2].planID);
+      expect(plans[2].dateCreated, expectedPlans[2].dateCreated);
+      expect(plans[2].owner, expectedPlans[2].owner);
+      expect(plans[2].schoolID, expectedPlans[2].schoolID);
+      expect(plans[2].degName, expectedPlans[2].degName);
+    });
+    // //test('', () {});
   });
   group('getFavePlan tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
+    model.setCurrentUser("email1@email.com");
+    Plan plan1 = Plan(1, "${today.year}-${today.month}-${today.day}",
+        "email1@email.com", "school", "deg1");
+    Plan plan2 = Plan(2, "${today.year}-${today.month}-${today.day}",
+        "email1@email.com", "school", "deg2");
+    Plan plan3 = Plan(3, "${today.year}-${today.month}-${today.day}",
+        "email1@email.com", "school", "deg3");
+
+    test('Testing with no favorite plans', () async {
+      Plan favoritePlan = await model.getFavePlan();
+      expect(favoritePlan.planID, -1);
+      expect(favoritePlan.dateCreated, '');
+      expect(favoritePlan.schoolID, '');
+      expect(favoritePlan.degName, '');
+    });
+    test('Testing with one favorite plan', () async {
+      await model.addPlan(plan1);
+      await model.addPlan(plan2);
+      await model.addPlan(plan3);
+      await model.setFavePlan(1);
+      Plan favoritePlan = await model.getFavePlan();
+      await model.removeAllPlans();
+      expect(favoritePlan.planID, plan1.planID);
+      expect(favoritePlan.dateCreated, plan1.dateCreated);
+      expect(favoritePlan.schoolID, plan1.schoolID);
+      expect(favoritePlan.degName, plan1.degName);
+    });
+    //test('', () {});
   });
   group('getFavePlanIndex tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
-  });
-  group('getPlanSchoolName tests', () {
-    test('', () {});
-    test('', () {});
-    test('', () {});
+    model.setCurrentUser("email1@email.com");
+    Plan plan1 = Plan(1, "${today.year}-${today.month}-${today.day}",
+        "email1@email.com", "school", "deg1");
+    Plan plan2 = Plan(2, "${today.year}-${today.month}-${today.day}",
+        "email1@email.com", "school", "deg2");
+    Plan plan3 = Plan(3, "${today.year}-${today.month}-${today.day}",
+        "email1@email.com", "school", "deg3");
+
+    test('Testing with no favorite plans', () async {
+      expect(await model.getFavePlanIndex(), -1);
+    });
+    test('Testing with a valid favorite plan', () async {
+      await model.addPlan(plan1);
+      await model.addPlan(plan2);
+      await model.addPlan(plan3);
+      await model.setFavePlan(1);
+      int planIndex = await model.getFavePlanIndex();
+      await model.removePlan(plan1);
+      await model.removePlan(plan2);
+      await model.removePlan(plan3);
+      expect(planIndex, 0);
+    });
+    //test('', () {});
   });
   group('getReqs tests', () {
     test('', () {});
