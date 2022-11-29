@@ -92,7 +92,7 @@ class _OverviewState extends State<Overview> {
                   borderRadius: 12.0,
                   direction: Axis.horizontal,
                   center: Text(
-                    totalReq == 0 ? '0%' : '${100 * numReqMet / totalReq}%',
+                    totalReq == 0 ? '0%' : '${(100 * numReqMet / totalReq).toStringAsFixed(2)}%',
                     style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.normal,
