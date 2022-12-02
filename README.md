@@ -1,5 +1,5 @@
 # Artic: Senior Design Project
-version: 11/27/2022
+version: 11/27/2022 [GitHub](https://github.com/Jellyfish25/Artic)
 
 Mobile application that aims to assist undergraduates in developing a degree plan for a specified major or exploring alternative majors based on past course history
 
